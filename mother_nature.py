@@ -117,9 +117,9 @@ def create_graph_node(node_class_name, text_message):
 
     template_string = '''
 
-    Node to be added to the Knowledge Graph
+Node to be added to the Knowledge Graph
 
-    ```python
+```python
       class %s(object):
 
           def __init__(self):
@@ -129,10 +129,12 @@ def create_graph_node(node_class_name, text_message):
           @staticmethod
           def get_smiles():
 
-            smiles = {%s}
+            smiles = {
+                %s
+            }
 
             return smiles
-    ```
+```
     ''' % (
       node_class_name,
       node_name,
