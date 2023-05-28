@@ -1,10 +1,14 @@
 # Imports
 # -------
 import os
+import re
 import discord
+import textwrap
+import pandas as pd
 
 from github import Github
 from dotenv import load_dotenv
+from langchain.agents import create_pandas_dataframe_agent
 
 # Discord Environment
 # --------------------
@@ -12,6 +16,8 @@ from dotenv import load_dotenv
 load_dotenv()
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
+GITHUB_GLOBALCHEM_TOKEN = os.getenv('GITHUB_TOKEN')
+OPENAI_API_KEY= os.getenv('OPENAI_API_KEY')
 
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
@@ -22,95 +28,162 @@ client = discord.Client(intents=intents)
 github = Github(GITHUB_TOKEN)
 repo = github.get_repo("Global-Chem/private-workers")
 
+global_chem_github = Github(GITHUB_GLOBALCHEM_TOKEN)
+global_chem_repo = github.get_repo("Global-Chem/global-chem")
+
+# Langchains
+# ----------
+
+from langchain import OpenAI, ConversationChain, LLMChain, PromptTemplate
+from langchain.memory import ConversationBufferWindowMemory
+
+template = """Mother Nature is a large language model trained on GlobalChem with a Connector into Other Language Models.
+Assistant is designed to be able to assist with a wide range of tasks, from answering simple questions to providing in-depth explanations and discussions on a wide range of topics in relation to chemistry.
+
+Human: {human_input}
+"""
+
+prompt = PromptTemplate(
+  input_variables=["human_input"],
+  template=template
+)
+
+df = pd.read_csv(
+  'https://raw.githubusercontent.com/Global-Chem/global-chem/development/global_chem/global_chem_outputs/global_chem.tsv',
+  sep='\t',
+  header=None,
+  names=['name', 'smiles', 'node', 'predicate', 'path']
+)
+
+chatgpt_chain = LLMChain(
+  llm=OpenAI(temperature=0, openai_api_key=OPENAI_API_KEY),
+  prompt=prompt,
+  verbose=True,
+  memory=ConversationBufferWindowMemory(k=100),
+)
+
+agent = create_pandas_dataframe_agent(
+  OpenAI(temperature=0, openai_api_key=OPENAI_API_KEY), df,verbose=True
+)
+
 # Discord Commands
 # ----------------
 
 @client.event
 async def on_ready():
-    print(f'{client.user.name} has connected to Discord!')
+    print(f'{client.user.name} has connected to Discord! \n {template}')
+
+
+# Input Commands
+# --------------
+
+action_keywords = [
+  'create', 'generate'
+]
+
+category_keywords = [
+  'solar cells',
+  'cannabis',
+  'war',
+  'sex',
+  'education',
+  'medicinal chemistry',
+  'food',
+  'environment',
+  'space',
+  'narcotics',
+  'global',
+  'contraceptives',
+  'materials'
+]
+
+langchain_keywords = [
+  'chatgpt'
+]
+
+def create_issue(keyword):
+
+    keyword = '_'.join(keyword.split())
+
+    label = repo.get_label("run_%s" % keyword)
+    repo.create_issue(title="%s Run" %keyword, labels=[label], assignee="Sulstice")
+
+    return
+
+def create_graph_node(node_class_name, text_message):
+
+    node_name = node_class_name.lower()
+    entries = str(re.findall('{(.+?)}', text_message))
+
+    template_string = '''
+
+    Node to be added to the Knowledge Graph
+
+    ```python
+      class %s(object):
+
+          def __init__(self):
+
+              self.name == '%s'
+
+          @staticmethod
+          def get_smiles():
+
+            smiles = {%s}
+
+            return smiles
+    ```
+    ''' % (
+      node_class_name,
+      node_name,
+      entries
+    )
+
+    global_chem_repo.create_issue(
+      title='Create Graph Node: %s' % node_class_name,
+      body=template_string,
+      assignee="Sulstice"
+    )
 
 @client.event
 async def on_message(message):
 
-    if 'thank you' in message.content.lower():
+    text_message = message.content.lower()
+
+    if 'thank you' in text_message:
         await message.channel.send('No Problem')
 
-    # Cannabis
+    # Generating New Chemicals
 
-    if 'create new cannabis chemicals' in message.content.lower():
-        await message.channel.send('Generating New Cannabis Compounds Now..')
-        label = repo.get_label("run_cannabis")
-        repo.create_issue(title="Cannabis Run", labels=[label])
+    if any(word in text_message for word in action_keywords):
+        for keyword in category_keywords:
+            if keyword in text_message:
+                await message.channel.send('Creating %s Chemicals Now...' % keyword)
+                create_issue(keyword=keyword)
 
-    # War
+    # Talk to Our Graph Network
 
-    if 'create new war chemicals' in message.content.lower():
-      await message.channel.send('Generating New War Compounds Now..')
-      label = repo.get_label("run_war")
-      repo.create_issue(title="War Run", labels=[label])
+    if 'add node' in text_message:
+        node_class_name = message.content.split('Node Name:')[1].split()[0]
+        await message.channel.send('Creating Graph Node...')
+        create_graph_node(node_class_name, text_message)
+        await  message.channel.send('Graph Node Created')
 
-    # Sex
+    # Global-Chem Integration
 
-    if 'create new sex chemicals' in message.content.lower():
-      await message.channel.send('Generating New Sex Compounds Now..')
-      label = repo.get_label("run_sex")
-      repo.create_issue(title="Sex Run", labels=[label])
+    if 'dataframe' in message.content.lower():
+        output = agent.run(message)
+        await message.channel.send(output)
 
-    # Education
+    # Language Chaining Chemicals
 
-    if 'create new education chemicals' in message.content.lower():
-      await message.channel.send('Generating New Education Compounds Now..')
-      label = repo.get_label("run_education")
-      repo.create_issue(title="Education Run", labels=[label])
+    if any(word in text_message for word in langchain_keywords):
 
-    # Medicinal Chemistry
+        output = chatgpt_chain.predict(
+          human_input=message.content.lower()
+        )
 
-    if 'create new medicinal chemicals' in message.content.lower():
-      await message.channel.send('Generating New Medicinal Compounds Now..')
-      label = repo.get_label("run_medicinal_chemistry")
-      repo.create_issue(title="Medicinal Chemistry Run", labels=[label])
-
-    # Food
-
-    if 'create new food chemicals' in message.content.lower():
-      await message.channel.send('Generating New Food Compounds Now..')
-      label = repo.get_label("run_food")
-      repo.create_issue(title="Food Run", labels=[label])
-
-    # Environment
-
-    if 'create new environment chemicals' in message.content.lower():
-      await message.channel.send('Generating New Environment Compounds Now..')
-      label = repo.get_label("run_environment")
-      repo.create_issue(title="Environment Run", labels=[label])
-
-    # Space
-
-    if 'create new space chemicals' in message.content.lower():
-      await message.channel.send('Generating New Space Compounds Now..')
-      label = repo.get_label("run_space")
-      repo.create_issue(title="Space Run", labels=[label])
-
-    # Materials
-
-    if 'create new materials chemicals' in message.content.lower():
-      await message.channel.send('Generating New Materials Compounds Now..')
-      label = repo.get_label("run_materials")
-      repo.create_issue(title="Materials Run", labels=[label])
-
-    # Narcotics
-
-    if 'create new narcotics chemicals' in message.content.lower():
-      await message.channel.send('Generating New Narcotics Compounds Now..')
-      label = repo.get_label("run_narcotics")
-      repo.create_issue(title="Narcotics Run", labels=[label])
-
-    # Global
-
-    if 'create new global chemicals' in message.content.lower():
-      await message.channel.send('Generating New Global Compounds Now..')
-      label = repo.get_label("run_global")
-      repo.create_issue(title="Global Run", labels=[label])
+        await message.channel.send(output)
 
 # Runner
 # ------
