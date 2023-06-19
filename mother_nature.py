@@ -52,6 +52,24 @@ template = """Welcome to a prototype version of a GlobalChem Linked to ChatGPT w
 # Core Functions
 # --------------
 
+def retrieve_channel_conversation_history(keyword, include_mother_nature=False):
+
+  '''
+
+  To retrieve all channel conversation
+
+  Arguments:
+      keyword (String): the channel where you are abstracted text from
+      include_mother_nature (Bool): whether to include the user mother nature text or not.
+
+  '''
+
+  conversation = ''
+
+  # Get text here
+
+  return conversation
+
 def create_issue(keyword):
 
   keyword = '_'.join(keyword.split())
@@ -97,7 +115,6 @@ Node to be added to the Knowledge Graph
     body=template_string,
     assignee="Sulstice"
   )
-
 
 # Routine Startup Commands
 # ------------------------
@@ -175,7 +192,7 @@ async def on_message(message):
     )
 
     await message.channel.send(output)
-    
+
 # 4. Execute the Runner
 
 client.run(DISCORD_TOKEN)
