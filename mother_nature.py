@@ -3,6 +3,7 @@
 import os
 import re
 import discord
+import asyncio
 import textwrap
 import pandas as pd
 
@@ -52,7 +53,7 @@ template = """Welcome to a prototype version of a GlobalChem Linked to ChatGPT w
 # Core Functions
 # --------------
 
-def retrieve_channel_conversation_history(keyword, include_mother_nature=False):
+async def retrieve_channel_conversation_history(keyword, after_date, include_mother_nature=False):
 
   '''
 
@@ -60,15 +61,32 @@ def retrieve_channel_conversation_history(keyword, include_mother_nature=False):
 
   Arguments:
       keyword (String): the channel where you are abstracted text from
+      after_date (date and time): the date to start abstracting the text from, recommended as a UTC aware datetime
       include_mother_nature (Bool): whether to include the user mother nature text or not.
 
   '''
-
-  conversation = ''
-
   # Get text here
+  contents = []
+  channels = client.get_all_channels()
+  #print(channels.__dict__)
+  for channel in channels:
+    contents.append(channel.name)
+    if channel.name == keyword:
+      return [channel async for channel in channel.history(limit=10)]
+      break
 
-  return conversation
+
+
+
+      
+  '''for message in channel.history(after=after_date):
+    print(message)
+    if not include_mother_nature and message.author == "Mother Nature":
+      continue
+    contents.add[message]
+  break'''
+
+  return contents
 
 def create_issue(keyword):
 
@@ -196,3 +214,8 @@ async def on_message(message):
 # 4. Execute the Runner
 
 client.run(DISCORD_TOKEN)
+
+# 5. Retrieve Information
+
+conversation = asyncio.run(retrieve_channel_conversation_history("cannabis", "2022-2-3 10:11:12"))
+print(conversation)
