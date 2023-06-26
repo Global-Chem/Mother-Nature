@@ -15,7 +15,7 @@ import pandas as pd
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from discord.ext import commands
-from discord.ext.commands import Bot
+#from discord.ext.commands import Bot
 
 from github import Github
 from dotenv import load_dotenv
@@ -28,7 +28,7 @@ from color_legal import BotColourAdditiveList
 # Defaults
 # --------
 
-list_commands = ["history: (number) year month day (True/False) include_mother_nature", "commands", "help"]
+list_commands = ["history: (number) year month day (True/False) include_mother_nature", "commands", "help", "iscolorlegal", "createissue"]
 
 langchain_keywords = ['chatgpt']
 action_keywords = ['create', 'generate']
@@ -51,9 +51,13 @@ client = discord.Client(intents=intents)
 
 channel = discord.utils.get(client.get_all_channels(), name='cannabis')
 
-bot = commands.Bot(command_prefix='?', intents=intents)
+bot = commands.Bot(command_prefix='$', intents=intents, guild=discord.Object(id=996592811887579317))
 
-@bot.command(name='history')
+@bot.command(name='test', description='testing', guild=discord.Object(id=996592811887579317))
+async def test(ctx, msg1):
+  await ctx.send(msg1)
+
+@bot.command(name='history', description='gets history of the channel')
 async def get_history(channel, year, month, day, include_mother_nature):
   stop_words = set(stopwords.words('english'))
   
@@ -91,7 +95,7 @@ async def on_message(message):
     await color_legal(message)
     return
 
-  else:
+  elif words[1] == "createissue":
     for role in message.author.roles:
       if role.name == "Nature Lorax":
         text_message = message.content.lower()
@@ -100,7 +104,10 @@ async def on_message(message):
             if keyword in text_message:
               await message.channel.send('Creating %s Chemicals Now...' % keyword)
               await create_issue(keyword=keyword)
-   
+      else:
+        message.channel.send("You do not have permissions for this")
+  
+@bot.command(name='iscolorlegal')
 async def color_legal(message):
     bot = BotColourAdditiveList()
     bot.get_fda_reported_lists()
@@ -108,6 +115,7 @@ async def color_legal(message):
     response = bot.check_list_status()
     await message.channel.send(response)
 
+@bot.command(name='createissue')
 async def create_issue(keyword):
 
   keyword = '_'.join(keyword.split())
