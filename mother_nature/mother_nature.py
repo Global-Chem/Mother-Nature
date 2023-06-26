@@ -15,7 +15,8 @@ import pandas as pd
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from discord.ext import commands
-#from discord.ext.commands import Bot
+from discord import app_commands
+from discord.ext.commands import Bot
 
 from github import Github
 from dotenv import load_dotenv
@@ -51,16 +52,23 @@ client = discord.Client(intents=intents)
 
 channel = discord.utils.get(client.get_all_channels(), name='cannabis')
 
-bot = commands.Bot(command_prefix='$', intents=intents, guild=discord.Object(id=996592811887579317))
+bot = commands.Bot(command_prefix='$', intents=intents)
+bot = app_commands.CommandTree(client)
 
-@bot.command(name='test', description='testing', guild=discord.Object(id=996592811887579317))
-async def test(ctx, msg1):
-  await ctx.send(msg1)
+@bot.command(name='tester', description='testing', guild=discord.Object(id=996592811887579317))
+async def test(ctx, msg: str):
+  await ctx.send(msg)
 
-@bot.command(name='history', description='gets history of the channel')
-async def get_history(channel, year, month, day, include_mother_nature):
+@client.event
+async def on_ready():
+    await bot.sync(guild=discord.Object(id=996592811887579317))
+    print("Ready!")
+
+@bot.command(name='history', description='gets the history of the channel and takes out common words from each message', guild=discord.Object(id=996592811887579317))
+async def get_history(ctx, year: int, month: int, day: int, include_mother_nature: bool):
   stop_words = set(stopwords.words('english'))
-  
+  channel = ctx.channel
+
   msg = [message async for message in channel.history(after=datetime.datetime(year, month, day))]
   for text in msg:
     filtered_sentence = []
@@ -69,6 +77,11 @@ async def get_history(channel, year, month, day, include_mother_nature):
       if w not in stop_words:
           filtered_sentence.append(w)
     await channel.send(' '.join(str(x) for x in filtered_sentence))
+
+@bot.command(name='commands', description='prints all commands', guild=discord.Object(id=996592811887579317))
+async def get_commands(ctx):
+  for command in list_commands:
+      await ctx.channel.send(command)
 
 @client.event
 async def on_message(message):
@@ -94,29 +107,30 @@ async def on_message(message):
   elif words[1] == "iscolorlegal":
     await color_legal(message)
     return
-
-  elif words[1] == "createissue":
-    for role in message.author.roles:
-      if role.name == "Nature Lorax":
-        text_message = message.content.lower()
-        if any(word in text_message for word in action_keywords):
-          for keyword in category_keywords:
-            if keyword in text_message:
-              await message.channel.send('Creating %s Chemicals Now...' % keyword)
-              await create_issue(keyword=keyword)
-      else:
-        message.channel.send("You do not have permissions for this")
+    
   
-@bot.command(name='iscolorlegal')
-async def color_legal(message):
+@bot.command(name='is_color_legal', description='checks if a food coloring is legal according to the FDA', guild=discord.Object(id=996592811887579317))
+async def color_legal(ctx):
     bot = BotColourAdditiveList()
     bot.get_fda_reported_lists()
     bot.get_global_chem_lists()
     response = bot.check_list_status()
-    await message.channel.send(response)
+    await ctx.channel.send(response)
 
-@bot.command(name='createissue')
-async def create_issue(keyword):
+@bot.command(name='make_github_issue', description='creates a github issue', guild=discord.Object(id=996592811887579317))
+async def github_issue(ctx, message: str):
+    for role in message.author.roles:
+      if role.name == "Nature Lorax":
+        text_message = ctx.message.content.lower()
+        if any(word in text_message for word in action_keywords):
+          for keyword in category_keywords:
+            if keyword in text_message:
+              await ctx.channel.send('Creating %s Chemicals Now...' % keyword)
+              await create_issue(keyword=keyword)
+      else:
+        ctx.channel.send("You do not have permissions for this")
+
+async def create_issue(*keyword):
 
   keyword = '_'.join(keyword.split())
 
