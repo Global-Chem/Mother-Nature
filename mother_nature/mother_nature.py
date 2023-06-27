@@ -32,7 +32,6 @@ from color_legal import BotColourAdditiveList
 list_commands = ["history: (number) year month day (True/False) include_mother_nature", "commands", "help", "iscolorlegal", "createissue"]
 
 langchain_keywords = ['chatgpt']
-action_keywords = ['create', 'generate']
 category_keywords = [
   'solar cells', 'cannabis', 'war', 'sex', 'education', 'medicinal chemistry', 'food', 'environment',
   'space', 'narcotics', 'global', 'contraceptives', 'materials'
@@ -71,6 +70,8 @@ async def get_history(ctx, year: int, month: int, day: int, include_mother_natur
 
   msg = [message async for message in channel.history(after=datetime.datetime(year, month, day))]
   for text in msg:
+    if include_mother_nature == False and text.author.name == "Mother Nature":
+      continue
     filtered_sentence = []
     word_tokens = word_tokenize(text.content)
     for w in word_tokens:
@@ -81,33 +82,7 @@ async def get_history(ctx, year: int, month: int, day: int, include_mother_natur
 @bot.command(name='commands', description='prints all commands', guild=discord.Object(id=996592811887579317))
 async def get_commands(ctx):
   for command in list_commands:
-      await ctx.channel.send(command)
-
-@client.event
-async def on_message(message):
-  if message.author == "Mother Nature" or not message.content.startswith("!mn"):
-    return
- 
-  words = message.content.split()
-
-  if words[1] == "history":
-    year = int(words[2])
-    month = int(words[3])
-    day = int(words[4])
-    include_mother_nature = False
-    if len(words) > 5:
-      # must be capital first letter of True/False
-      include_mother_nature = ast.literal_eval(words[5])
-    await get_history(message.channel, year, month, day, include_mother_nature)
-
-  elif words[1] == "commands":
-    for command in list_commands:
-      await message.channel.send(command)
-
-  elif words[1] == "iscolorlegal":
-    await color_legal(message)
-    return
-    
+      await ctx.channel.send(command)    
   
 @bot.command(name='is_color_legal', description='checks if a food coloring is legal according to the FDA', guild=discord.Object(id=996592811887579317))
 async def color_legal(ctx):
@@ -119,18 +94,28 @@ async def color_legal(ctx):
 
 @bot.command(name='make_github_issue', description='creates a github issue', guild=discord.Object(id=996592811887579317))
 async def github_issue(ctx, message: str):
-    for role in message.author.roles:
-      if role.name == "Nature Lorax":
-        text_message = ctx.message.content.lower()
-        if any(word in text_message for word in action_keywords):
-          for keyword in category_keywords:
-            if keyword in text_message:
-              await ctx.channel.send('Creating %s Chemicals Now...' % keyword)
-              await create_issue(keyword=keyword)
-      else:
-        ctx.channel.send("You do not have permissions for this")
+    user_role = ""
+    for role in ctx.user.roles:
+      if role.name == "Arbiter of Nature":
+        user_role = "Arbiter of Nature"
+      elif role.name == "Nature Lorax" and user_role != "Arbiter of Nature":
+        user_role = "Nature Lorax"
+    if user_role != "":
+      text_message = message.lower()
+      for keyword in category_keywords:
+        if keyword in text_message:
+          if keyword == "war" or keyword == "narcotics":
+            if user_role == "Arbiter of Nature":
+              await create_issue(ctx.channel, keyword=keyword)
+            else:
+              await ctx.channel.send("You do not have the requisite permissions. You must have the role 'Arbiter of Nature' for the categories 'war' and 'narcotics'.")
+          elif user_role != "":
+            await create_issue(ctx.channel, keyword=keyword)
+    else:
+      await ctx.channel.send("You do not have permissions for this")
 
-async def create_issue(*keyword):
+async def create_issue(channel, keyword):
+  await channel.send('Creating %s Chemicals Now...' % keyword)
 
   keyword = '_'.join(keyword.split())
 
