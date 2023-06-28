@@ -54,10 +54,6 @@ channel = discord.utils.get(client.get_all_channels(), name='cannabis')
 bot = commands.Bot(command_prefix='$', intents=intents)
 bot = app_commands.CommandTree(client)
 
-@bot.command(name='tester', description='testing', guild=discord.Object(id=996592811887579317))
-async def test(ctx, msg: str):
-  await ctx.send(msg)
-
 @client.event
 async def on_ready():
     await bot.sync(guild=discord.Object(id=996592811887579317))
