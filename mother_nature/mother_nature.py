@@ -91,20 +91,18 @@ async def color_legal(ctx):
 @bot.command(name='make_github_issue', description='creates a github issue', guild=discord.Object(id=996592811887579317))
 async def github_issue(ctx, message: str):
     user_role = ""
-    if "Arbiter of Nature" in ctx.user.roles:
-        user_role = "Arbiter of Nature"
-    elif "Nature Lorax" in ctx.user.roles:
-        user_role = "Nature Lorax"
+    if "Arbiter of Nature" in [y.name.lower() for y in ctx.user.roles]:
+       user_role = "Arbiter of Nature"
+    elif "Nature Lorax" in [y.name.lower() for y in ctx.user.roles]:
+          user_role = "Nature Lorax"
     else:
-      await ctx.channel.send("You do not have permissions for this")
-      return
+       return
 
     text_message = message.lower()
     for keyword in category_keywords:
       if keyword in text_message:
         if keyword == "war" or keyword == "narcotics":
           if user_role == "Arbiter of Nature":
-            await ctx.channel.send("here")
             await create_issue(ctx.channel, keyword=keyword)
           else:
             await ctx.channel.send("You do not have the requisite permissions. You must have the role 'Arbiter of Nature' for the categories 'war' and 'narcotics'.")
