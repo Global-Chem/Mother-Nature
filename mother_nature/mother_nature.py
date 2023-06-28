@@ -91,24 +91,24 @@ async def color_legal(ctx):
 @bot.command(name='make_github_issue', description='creates a github issue', guild=discord.Object(id=996592811887579317))
 async def github_issue(ctx, message: str):
     user_role = ""
-    for role in ctx.user.roles:
-      if role.name == "Arbiter of Nature":
+    if "Arbiter of Nature" in ctx.user.roles:
         user_role = "Arbiter of Nature"
-      elif role.name == "Nature Lorax" and user_role != "Arbiter of Nature":
+    elif "Nature Lorax" in ctx.user.roles:
         user_role = "Nature Lorax"
-    if user_role != "":
-      text_message = message.lower()
-      for keyword in category_keywords:
-        if keyword in text_message:
-          if keyword == "war" or keyword == "narcotics":
-            if user_role == "Arbiter of Nature":
-              await create_issue(ctx.channel, keyword=keyword)
-            else:
-              await ctx.channel.send("You do not have the requisite permissions. You must have the role 'Arbiter of Nature' for the categories 'war' and 'narcotics'.")
-          elif user_role != "":
-            await create_issue(ctx.channel, keyword=keyword)
     else:
       await ctx.channel.send("You do not have permissions for this")
+      return
+
+    text_message = message.lower()
+    for keyword in category_keywords:
+      if keyword in text_message:
+        if keyword == "war" or keyword == "narcotics":
+          if user_role == "Arbiter of Nature":
+            await create_issue(ctx.channel, keyword=keyword)
+          else:
+            await ctx.channel.send("You do not have the requisite permissions. You must have the role 'Arbiter of Nature' for the categories 'war' and 'narcotics'.")
+        else:
+          await create_issue(ctx.channel, keyword=keyword)
 
 async def create_issue(channel, keyword):
   await channel.send('Creating %s Chemicals Now...' % keyword)
