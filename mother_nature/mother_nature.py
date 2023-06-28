@@ -92,9 +92,9 @@ async def color_legal(ctx):
 async def github_issue(ctx, message: str):
     await ctx.channel.send("terminal")
     user_role = ""
-    if "Arbiter of Nature" in [y.name.lower() for y in ctx.user.roles]:
+    if "Arbiter of Nature" in [y.name for y in ctx.user.roles]:
        user_role = "Arbiter of Nature"
-    elif "Nature Lorax" in [y.name.lower() for y in ctx.user.roles]:
+    elif "Nature Lorax" in [y.name for y in ctx.user.roles]:
           user_role = "Nature Lorax"
     else:
        return
