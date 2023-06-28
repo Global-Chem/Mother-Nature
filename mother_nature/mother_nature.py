@@ -90,7 +90,6 @@ async def color_legal(ctx):
 
 @bot.command(name='make_github_issue', description='creates a github issue', guild=discord.Object(id=996592811887579317))
 async def github_issue(ctx, message: str):
-    await ctx.channel.send("terminal")
     user_role = ""
     if "Arbiter of Nature" in [y.name for y in ctx.user.roles]:
        user_role = "Arbiter of Nature"
