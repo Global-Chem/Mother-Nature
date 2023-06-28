@@ -104,6 +104,7 @@ async def github_issue(ctx, message: str):
       if keyword in text_message:
         if keyword == "war" or keyword == "narcotics":
           if user_role == "Arbiter of Nature":
+            await ctx.channel.send("here")
             await create_issue(ctx.channel, keyword=keyword)
           else:
             await ctx.channel.send("You do not have the requisite permissions. You must have the role 'Arbiter of Nature' for the categories 'war' and 'narcotics'.")
