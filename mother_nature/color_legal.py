@@ -34,7 +34,7 @@ class BotColourAdditiveList(object):
         soup = BeautifulSoup(page.content, "html.parser")
 
         fda_lists = soup.find_all("ul", class_="ref")
-
+        print(fda_lists)
         fda_current_status = []
 
         for fda_list in fda_lists:
@@ -151,6 +151,7 @@ class BotColourAdditiveList(object):
             raise ValueError
 
         self.fda_lists = fda_current_status
+        return fda_current_status
 
     def get_global_chem_lists(self):
 

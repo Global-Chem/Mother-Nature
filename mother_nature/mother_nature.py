@@ -73,20 +73,30 @@ async def get_history(ctx, year: int, month: int, day: int, include_mother_natur
     for w in word_tokens:
       if w not in stop_words:
           filtered_sentence.append(w)
-    await channel.send(' '.join(str(x) for x in filtered_sentence))
+    await ctx.reply(' '.join(str(x) for x in filtered_sentence))
 
 @bot.command(name='commands', description='prints all commands', guild=discord.Object(id=996592811887579317))
 async def get_commands(ctx):
   for command in list_commands:
-      await ctx.channel.send(command)    
+      await ctx.reply(command)    
   
 @bot.command(name='is_color_legal', description='checks if a food coloring is legal according to the FDA', guild=discord.Object(id=996592811887579317))
-async def color_legal(ctx):
-    bot = BotColourAdditiveList()
-    bot.get_fda_reported_lists()
-    bot.get_global_chem_lists()
-    response = bot.check_list_status()
-    await ctx.channel.send(response)
+async def color_legal(ctx, chemical_name: str):
+  chemical_name = chemical_name.lower().strip()
+  bot = BotColourAdditiveList()
+  fda_list = bot.get_fda_reported_lists()
+  fda_list = sum(fda_list, [])
+  if chemical_name in fda_list:
+     await ctx.reply(chemical_name + " is legal in the United States")
+
+@bot.command(name='check_fda_color_status', description='checks if a food coloring is legal according to the FDA', guild=discord.Object(id=996592811887579317))
+async def check_color_status(ctx):
+  bot = BotColourAdditiveList()
+  bot.get_fda_reported_lists()
+  bot.get_global_chem_lists()
+  response = bot.check_list_status()
+  await ctx.reply(response)
+
 
 @bot.command(name='make_github_issue', description='creates a github issue', guild=discord.Object(id=996592811887579317))
 async def github_issue(ctx, message: str):
@@ -96,6 +106,7 @@ async def github_issue(ctx, message: str):
     elif "Nature Lorax" in [y.name for y in ctx.user.roles]:
           user_role = "Nature Lorax"
     else:
+       await ctx.reply("You do not have the requisite permissions to quiery Mother Nature with this command.")
        return
 
     text_message = message.lower()
@@ -105,7 +116,7 @@ async def github_issue(ctx, message: str):
           if user_role == "Arbiter of Nature":
             await create_issue(ctx.channel, keyword=keyword)
           else:
-            await ctx.channel.send("You do not have the requisite permissions. You must have the role 'Arbiter of Nature' for the categories 'war' and 'narcotics'.")
+            await ctx.reply("You do not have the requisite permissions to use these keywords. You must have the role 'Arbiter of Nature' for the categories 'war' and 'narcotics'.")
         else:
           await create_issue(ctx.channel, keyword=keyword)
 
