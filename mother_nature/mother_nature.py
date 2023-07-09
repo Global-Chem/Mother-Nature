@@ -8,6 +8,7 @@ nltk.download('stopwords')
 nltk.download('punkt')
 import discord
 import asyncio
+import requests
 import datetime
 import textwrap
 import pandas as pd
@@ -19,6 +20,7 @@ from discord import app_commands
 from discord.ext.commands import Bot
 
 from github import Github
+from git import Repo
 from dotenv import load_dotenv
 
 
@@ -29,7 +31,7 @@ from color_legal import BotColourAdditiveList
 # Defaults
 # --------
 
-list_commands = ["history: (number) year month day (True/False) include_mother_nature", "commands", "help", "iscolorlegal", "createissue"]
+list_commands = ["history", "commands", "help", "is_color_legal", "create_issue_lorax", "create_issue_arbiter", "check_fda_color_status", "edit_smile_file"]
 
 langchain_keywords = ['chatgpt']
 category_keywords = [
@@ -73,12 +75,12 @@ async def get_history(ctx, year: int, month: int, day: int, include_mother_natur
     for w in word_tokens:
       if w not in stop_words:
           filtered_sentence.append(w)
-    await ctx.reply(' '.join(str(x) for x in filtered_sentence))
+    await ctx.channel.send(' '.join(str(x) for x in filtered_sentence))
+  await ctx.response.send_message("Done")
 
 @bot.command(name='commands', description='prints all commands', guild=discord.Object(id=996592811887579317))
 async def get_commands(ctx):
-  for command in list_commands:
-      await ctx.reply(command)    
+  await ctx.response.send_message("\n".join(list_commands))    
   
 @bot.command(name='is_color_legal', description='checks if a food coloring is legal according to the FDA', guild=discord.Object(id=996592811887579317))
 async def color_legal(ctx, chemical_name: str):
@@ -87,7 +89,9 @@ async def color_legal(ctx, chemical_name: str):
   fda_list = bot.get_fda_reported_lists()
   fda_list = sum(fda_list, [])
   if chemical_name in fda_list:
-     await ctx.reply(chemical_name + " is legal in the United States")
+    await ctx.response.send_message(chemical_name + " is legal in the United States")
+  else:
+     await ctx.response.send_message(chemical_name + " is not in the FDA color list")
 
 @bot.command(name='check_fda_color_status', description='checks if a food coloring is legal according to the FDA', guild=discord.Object(id=996592811887579317))
 async def check_color_status(ctx):
@@ -95,30 +99,30 @@ async def check_color_status(ctx):
   bot.get_fda_reported_lists()
   bot.get_global_chem_lists()
   response = bot.check_list_status()
-  await ctx.reply(response)
+  await ctx.response.send_message(response)
+   
+@bot.command(name='edit_smile_file', description='edits the smile file for training mother nature', guild=discord.Object(id=996592811887579317))
+async def edit_smile_file(ctx, smile: str):
+  await ctx.response.send_message("Editing file now...")
+  label = repo.get_label("enhancement")
+  repo.create_issue(title="SMILE_edit Run", labels=[label], body=smile, assignee="Sulstice")
 
-
-@bot.command(name='make_github_issue', description='creates a github issue', guild=discord.Object(id=996592811887579317))
+@bot.command(name='make_github_issue_lorax', description='creates new chemical compounds', guild=discord.Object(id=996592811887579317))
 async def github_issue(ctx, message: str):
-    user_role = ""
-    if "Arbiter of Nature" in [y.name for y in ctx.user.roles]:
-       user_role = "Arbiter of Nature"
-    elif "Nature Lorax" in [y.name for y in ctx.user.roles]:
-          user_role = "Nature Lorax"
-    else:
-       await ctx.reply("You do not have the requisite permissions to quiery Mother Nature with this command.")
-       return
-
     text_message = message.lower()
     for keyword in category_keywords:
       if keyword in text_message:
         if keyword == "war" or keyword == "narcotics":
-          if user_role == "Arbiter of Nature":
-            await create_issue(ctx.channel, keyword=keyword)
-          else:
-            await ctx.reply("You do not have the requisite permissions to use these keywords. You must have the role 'Arbiter of Nature' for the categories 'war' and 'narcotics'.")
+            await ctx.response.send_message("You do not have the requisite permissions to use these keywords. You must have the role 'Arbiter of Nature' for the categories 'war' and 'narcotics'.")
         else:
           await create_issue(ctx.channel, keyword=keyword)
+
+@bot.command(name='make_github_issue_arbiter', description='creates new chemical compounds', guild=discord.Object(id=996592811887579317))
+async def github_issue(ctx, message: str):
+    text_message = message.lower()
+    for keyword in category_keywords:
+      if keyword in text_message:
+        await create_issue(ctx.channel, keyword=keyword)
 
 async def create_issue(channel, keyword):
   await channel.send('Creating %s Chemicals Now...' % keyword)
