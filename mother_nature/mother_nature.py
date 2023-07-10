@@ -59,7 +59,7 @@ class MotherNatureCommands(object):
 
     @client.event
     async def on_ready():
-        await bot.sync(guild=discord.Object(id=__GUILD_ID__))
+        await bot.sync(guild=discord.Object(id=MotherNatureCommands.__GUILD_ID__))
         print("Ready!")
     
     @bot.command(
