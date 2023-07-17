@@ -1,11 +1,13 @@
 # Python Internals
 # ----------------
 import os
+import re
 
 # Python Externals
 # ----------------
 
 import nltk
+import asyncio
 import discord
 
 # NLTK Download Data
@@ -54,10 +56,11 @@ class MotherNatureCommands(object):
       'contraceptives', 'materials'
     ]
 
-    def __init__(self, github, repo, client, bot):
+    def __init__(self, github, repo, global_chem_repo, client, bot):
 
         self.github = github
         self.repo = repo
+        self.global_chem_repo = global_chem_repo
 
         self.client = client
         self.bot = bot
@@ -270,3 +273,48 @@ class MotherNatureCommands(object):
       label = self.repo.get_label("run_%s" % keyword)
       self.repo.create_issue(title="%s Run" %keyword, labels=[label], assignee="Sulstice")
 
+    def create_graph_node(self, node_class_name, text_message):
+      node_name = node_class_name.lower()
+      entries = str(re.findall('{(.+?)}', text_message))
+      template_string = '''
+      Node to be added to the Knowledge Graph
+      ```python
+            class %s(object):
+                def __init__(self):
+                    self.name == '%s'
+                @staticmethod
+                def get_smiles():
+                  smiles = {
+                      %s
+                  }
+                  return smiles
+      ```
+          ''' % (node_class_name,
+      node_name,
+      entries
+      )
+
+      self.global_chem_repo.create_issue(
+      title='Create Graph Node: %s' % node_class_name,
+      body=template_string,
+      assignee="Sulstice"
+    )
+      
+    async def add_smile_file(self, smile):
+      label = self.repo.get_label("add_smile")
+      self.repo.create_issue(title="SMILE edit Run", labels=[label], body=smile, assignee="Sulstice")
+
+    async def remove_smile_file(self, smile):
+      label = self.repo.get_label("remove_smile")
+      self.repo.create_issue(title="SMILE edit Run", labels=[label], body=smile, assignee="Sulstice")
+      
+    async def retrain(self, channel_name):
+      channel = self.get_channel(channel_name)
+      label = self.repo.get_label("retrain_%s" % channel_name)
+      self.repo.create_issue(title="SMILE edit Run", labels=[label], assignee="Sulstice")
+      await asyncio.sleep(518400)
+      allowed_mentions = discord.AllowedMentions(everyone = True)
+      await channel.send(content = "@everyone Mother Nature will retrain in 1 day", allowed_mentions = allowed_mentions)
+      await asyncio.sleep(86400)
+      await channel.send("Retraining...")
+      self.retrain(channel_name)
