@@ -7,7 +7,6 @@ import os
 
 import nltk
 import discord
-from dotenv import load_dotenv
 
 # NLTK Download Data
 # ------------------
@@ -55,23 +54,13 @@ class MotherNatureCommands(object):
       'contraceptives', 'materials'
     ]
 
-    def __init__(self):
+    def __init__(self, github, repo, client, bot):
 
-        self.dot_env = load_dotenv()
-        self.GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
-        self.DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
+        self.github = github
+        self.repo = repo
 
-        self.github = Github(self.GITHUB_TOKEN)
-        self.repo = self.github.get_repo("Global-Chem/private-workers")
-
-        self.intents = discord.Intents.default()
-        self.intents.message_content = True
-        self.client = discord.Client(intents=self.intents)
-
-        self.channel = discord.utils.get(self.client.get_all_channels(), name='cannabis')
-
-        self.bot = commands.Bot(command_prefix='$', intents=self.intents)
-        self.bot = app_commands.CommandTree(self.client)
+        self.client = client
+        self.bot = bot
 
     def get_channel(self, channel_name):
 
