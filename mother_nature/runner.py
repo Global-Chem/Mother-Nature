@@ -80,7 +80,13 @@ command_names = {
   'make_github_issue_arbiter': 'creates new chemical compounds'
 }
 
-mother_nature = MotherNatureCommands()
+mother_nature = MotherNatureCommands(
+  github=github, 
+  repo=repo, 
+  client=client, 
+  bot=bot
+)
+
 guild_object = discord.Object(id=mother_nature.__GUILD_ID__)
 
 @bot.command(name='history', description=command_names['history'], guild=guild_object)
