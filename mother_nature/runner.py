@@ -81,7 +81,8 @@ command_names = {
   'add_smile_file': 'adds a smile to the smile file for training mother nature',
   'remove_smile_file': 'removes a smile from the smile file for training mother nature',
   'retrain': 'retrains mother nature bot ',
-  'create_graph_node': 'creates a new node in the global chem graph'
+  'create_graph_node': 'creates a new node in the global chem graph',
+  'fetch_training_set': 'fetches the training set and sends the image to the corresponding channel'
 }
 
 mother_nature = MotherNatureCommands(
@@ -111,6 +112,7 @@ async def color_legal(ctx, chemical_name: str):
 @bot.command(name='check_fda_color_status', description=command_names['check_fda_color_status'], guild=guild_object)
 async def check_color_status(ctx):
   await ctx.response.send_message(await mother_nature.check_fda_color_status())
+  print(dir(repo))
 
 @bot.command(name='remove_smile_file', description=command_names['remove_smile_file'], guild=guild_object)
 async def remove_smile_file(ctx, smile: str):
@@ -138,7 +140,13 @@ async def github_issue(ctx, message: str):
   await mother_nature.make_issue_arbiter(ctx.channel.name, message)
 
 @bot.command(name='create_graph_node', description=command_names['create_graph_node'], guild=discord.Object(id=996592811887579317))
-async def create_graph_node(node_class_name: str, text_message: str):
+async def create_graph_node(ctx, node_class_name: str, text_message: str):
+  await ctx.response.send_message("Creating a new node now...")
   await mother_nature.create_graph_node(node_class_name, text_message)
+
+@bot.command(name='fetch_training_set', description=command_names['fetch_training_set'], guild=discord.Object(id=996592811887579317))
+async def fetch_training_set(ctx, category: str):
+  await ctx.response.send_message("Fetching data...")
+  await mother_nature.fetch_training_set(category)
 
 client.run(DISCORD_TOKEN)

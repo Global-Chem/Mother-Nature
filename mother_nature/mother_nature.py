@@ -53,7 +53,7 @@ class MotherNatureCommands(object):
       'solar cells', 'cannabis', 'war', 'sex',
       'education', 'medicinal chemistry', 'food',
       'environment',  'space', 'narcotics', 'global',
-      'contraceptives', 'materials'
+      'contraceptives', 'materials', 'performance enhancements'
     ]
 
     def __init__(self, github, repo, global_chem_repo, client, bot):
@@ -249,8 +249,8 @@ class MotherNatureCommands(object):
       text_message = message.lower()
       for keyword in self.__category_keywords__:
         if keyword in text_message:
-          if keyword == "war" or keyword == "narcotics":
-              await channel.send("You do not have the requisite permissions to use the %s keyword. You must have the role 'Arbiter of Nature' for the categories 'war' and 'narcotics'." %keyword)
+          if keyword == "war" or keyword == "narcotics" or keyword == "performance enhancements":
+              await channel.send("You do not have the requisite permissions to use the %s keyword. You must have the role 'Arbiter of Nature' for the categories 'war', 'narcotics', and 'performance enhancements'." %keyword)
           else:
             await self.create_issue(channel, keyword=keyword)
 
@@ -273,9 +273,14 @@ class MotherNatureCommands(object):
       label = self.repo.get_label("run_%s" % keyword)
       self.repo.create_issue(title="%s Run" %keyword, labels=[label], assignee="Sulstice")
 
-    def create_graph_node(self, node_class_name, text_message):
+    smiles = {'arachidic': '', 'arachidic': '',}
+
+
+    async def create_graph_node(self, node_class_name, text_message):
       node_name = node_class_name.lower()
-      entries = str(re.findall('{(.+?)}', text_message))
+      entries = {}
+      _ = [ entries.setdefault(i.strip(), '') for i in text_message.split(",") ]
+      print(entries)
       template_string = '''
       Node to be added to the Knowledge Graph
       ```python
@@ -284,9 +289,7 @@ class MotherNatureCommands(object):
                     self.name == '%s'
                 @staticmethod
                 def get_smiles():
-                  smiles = {
-                      %s
-                  }
+                  smiles =  %s
                   return smiles
       ```
           ''' % (node_class_name,
@@ -318,3 +321,7 @@ class MotherNatureCommands(object):
       await asyncio.sleep(86400)
       await channel.send("Retraining...")
       self.retrain(channel_name)
+
+    async def fetch_training_set(self, training_set):
+      label = self.repo.get_label("fetch_%s" % training_set)
+      self.repo.create_issue(title="Fetch_Training_Set", labels=[label], assignee="Sulstice")
