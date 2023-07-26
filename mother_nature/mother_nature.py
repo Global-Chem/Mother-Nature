@@ -280,7 +280,6 @@ class MotherNatureCommands(object):
       node_name = node_class_name.lower()
       entries = {}
       _ = [ entries.setdefault(i.strip(), '') for i in text_message.split(",") ]
-      print(entries)
       template_string = '''
       Node to be added to the Knowledge Graph
       ```python
@@ -303,13 +302,14 @@ class MotherNatureCommands(object):
       assignee="Sulstice"
     )
       
-    async def add_smile_file(self, smile):
-      label = self.repo.get_label("add_smile")
-      self.repo.create_issue(title="SMILE edit Run", labels=[label], body=smile, assignee="Sulstice")
+    async def add_smile_file(self, smile_index, channel_name):
+      channel = self.get_channel(channel_name)
+      label = self.repo.get_label("add_smile_%s" % channel_name)
+      self.repo.create_issue(title="SMILE edit Run", labels=[label], body=smile_index, assignee="Sulstice")
 
-    async def remove_smile_file(self, smile):
-      label = self.repo.get_label("remove_smile")
-      self.repo.create_issue(title="SMILE edit Run", labels=[label], body=smile, assignee="Sulstice")
+    async def remove_smile_file(self, smile_index, channel_name):
+      label = self.repo.get_label("remove_smile_%s" % channel_name)
+      self.repo.create_issue(title="SMILE edit Run", labels=[label], body=smile_index, assignee="Sulstice")
       
     async def retrain(self, channel_name, retrain_again):
       channel = self.get_channel(channel_name)
@@ -327,3 +327,7 @@ class MotherNatureCommands(object):
     async def fetch_training_set(self, training_set):
       label = self.repo.get_label("fetch_%s" % training_set)
       self.repo.create_issue(title="Fetch_Training_Set", labels=[label], assignee="Sulstice")
+
+    async def file_issue(self, title, issue):
+      label = self.repo.get_label("user_reported")
+      self.repo.create_issue(title=title, labels=[label], body=issue, assignee="Sulstice")

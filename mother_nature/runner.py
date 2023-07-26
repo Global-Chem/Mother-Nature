@@ -82,7 +82,8 @@ command_names = {
   'remove_smile_file': 'removes a smile from the smile file for training mother nature',
   'retrain': 'retrains mother nature bot ',
   'create_graph_node': 'creates a new node in the global chem graph',
-  'fetch_training_set': 'fetches the training set and sends the image to the corresponding channel'
+  'fetch_training_set': 'fetches the training set and sends the image to the corresponding channel',
+  'file_issue': 'creates a github issue for something that needs fixing'
 }
 
 mother_nature = MotherNatureCommands(
@@ -112,17 +113,16 @@ async def color_legal(ctx, chemical_name: str):
 @bot.command(name='check_fda_color_status', description=command_names['check_fda_color_status'], guild=guild_object)
 async def check_color_status(ctx):
   await ctx.response.send_message(await mother_nature.check_fda_color_status())
-  print(dir(repo))
 
 @bot.command(name='remove_smile_file', description=command_names['remove_smile_file'], guild=guild_object)
-async def remove_smile_file(ctx, smile: str):
+async def remove_smile_file(ctx, smile_index: int):
   await ctx.response.send_message("Editing file now...")
-  await mother_nature.remove_smile_file(smile)
+  await mother_nature.remove_smile_file(smile_index, ctx.channel.name)
 
 @bot.command(name='add_smile_file', description=command_names['add_smile_file'], guild=guild_object)
-async def add_smile_file(ctx, smile: str):
+async def add_smile_file(ctx, smile_index: int):
   await ctx.response.send_message("Editing file now...")
-  await mother_nature.add_smile_file(smile)
+  await mother_nature.add_smile_file(smile_index, ctx.channel.name)
 
 @bot.command(name='retrain_mother_nature', description=command_names['retrain'], guild=guild_object)
 async def retrain(ctx, retrain_again: bool):
@@ -130,14 +130,14 @@ async def retrain(ctx, retrain_again: bool):
   await mother_nature.retrain(ctx.channel.name, retrain_again)
 
 @bot.command(name='make_github_issue_lorax', description=command_names['make_github_issue_lorax'], guild=guild_object)
-async def github_issue(ctx, message: str):
+async def github_issue(ctx, channel_name: str):
   await ctx.response.send_message("Do you speak for the trees, profound lorax?")
-  await mother_nature.make_issue_lorax(ctx.channel.name, message)
+  await mother_nature.make_issue_lorax(ctx.channel.name, channel_name)
 
 @bot.command(name='make_github_issue_arbiter', description=command_names['make_github_issue_arbiter'], guild=guild_object)
-async def github_issue(ctx, message: str):
+async def github_issue(ctx, channel_name: str):
   await ctx.response.send_message("Have you discovered your secret power, o mighty arbiter?")
-  await mother_nature.make_issue_arbiter(ctx.channel.name, message)
+  await mother_nature.make_issue_arbiter(ctx.channel.name, channel_name)
 
 @bot.command(name='create_graph_node', description=command_names['create_graph_node'], guild=discord.Object(id=996592811887579317))
 async def create_graph_node(ctx, node_class_name: str, text_message: str):
@@ -148,5 +148,10 @@ async def create_graph_node(ctx, node_class_name: str, text_message: str):
 async def fetch_training_set(ctx, category: str):
   await ctx.response.send_message("Fetching data...")
   await mother_nature.fetch_training_set(category)
+
+@bot.command(name='file_issue',description=command_names['file_issue'], guild=discord.Object(id=996592811887579317))
+async def file_issue(ctx, title: str, issue: str):
+  await ctx.response.send_message("Filing issue now...")
+  await mother_nature.file_issue(title, issue)
 
 client.run(DISCORD_TOKEN)
