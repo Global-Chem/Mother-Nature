@@ -125,9 +125,9 @@ async def add_smile_file(ctx, smile: str):
   await mother_nature.add_smile_file(smile)
 
 @bot.command(name='retrain_mother_nature', description=command_names['retrain'], guild=guild_object)
-async def retrain(ctx):
+async def retrain(ctx, retrain_again: bool):
   await ctx.response.send_message("Retraining now...")
-  await mother_nature.retrain(ctx.channel.name)
+  await mother_nature.retrain(ctx.channel.name, retrain_again)
 
 @bot.command(name='make_github_issue_lorax', description=command_names['make_github_issue_lorax'], guild=guild_object)
 async def github_issue(ctx, message: str):

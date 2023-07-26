@@ -311,16 +311,18 @@ class MotherNatureCommands(object):
       label = self.repo.get_label("remove_smile")
       self.repo.create_issue(title="SMILE edit Run", labels=[label], body=smile, assignee="Sulstice")
       
-    async def retrain(self, channel_name):
+    async def retrain(self, channel_name, retrain_again):
       channel = self.get_channel(channel_name)
       label = self.repo.get_label("retrain_%s" % channel_name)
       self.repo.create_issue(title="SMILE edit Run", labels=[label], assignee="Sulstice")
+      if retrain_again == False:
+        return
       await asyncio.sleep(518400)
       allowed_mentions = discord.AllowedMentions(everyone = True)
       await channel.send(content = "@everyone Mother Nature will retrain in 1 day", allowed_mentions = allowed_mentions)
       await asyncio.sleep(86400)
       await channel.send("Retraining...")
-      self.retrain(channel_name)
+      self.retrain(channel_name, retrain_again)
 
     async def fetch_training_set(self, training_set):
       label = self.repo.get_label("fetch_%s" % training_set)
