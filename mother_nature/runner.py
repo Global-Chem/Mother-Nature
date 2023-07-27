@@ -130,12 +130,12 @@ async def retrain(ctx, retrain_again: bool):
   await mother_nature.retrain(ctx.channel.name, retrain_again)
 
 @bot.command(name='make_github_issue_lorax', description=command_names['make_github_issue_lorax'], guild=guild_object)
-async def github_issue(ctx, channel_name: str):
+async def make_github_issue_lorax(ctx, channel_name: str):
   await ctx.response.send_message("Do you speak for the trees, profound lorax?")
   await mother_nature.make_issue_lorax(ctx.channel.name, channel_name)
 
 @bot.command(name='make_github_issue_arbiter', description=command_names['make_github_issue_arbiter'], guild=guild_object)
-async def github_issue(ctx, channel_name: str):
+async def make_github_issue_arbiter(ctx, channel_name: str):
   await ctx.response.send_message("Have you discovered your secret power, o mighty arbiter?")
   await mother_nature.make_issue_arbiter(ctx.channel.name, channel_name)
 
