@@ -305,11 +305,11 @@ class MotherNatureCommands(object):
     async def add_smile_file(self, smile_index, channel_name):
       channel = self.get_channel(channel_name)
       label = self.repo.get_label("add_smile_%s" % channel_name)
-      self.repo.create_issue(title="SMILE edit Run", labels=[label], body=smile_index, assignee="Sulstice")
+      self.repo.create_issue(title="SMILE edit Run", labels=[label], body=str(smile_index), assignee="Sulstice")
 
     async def remove_smile_file(self, smile_index, channel_name):
       label = self.repo.get_label("remove_smile_%s" % channel_name)
-      self.repo.create_issue(title="SMILE edit Run", labels=[label], body=smile_index, assignee="Sulstice")
+      self.repo.create_issue(title="SMILE edit Run", labels=[label], body=str(smile_index), assignee="Sulstice")
       
     async def retrain(self, channel_name, retrain_again):
       channel = self.get_channel(channel_name)
