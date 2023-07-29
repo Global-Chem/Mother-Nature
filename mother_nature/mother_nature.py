@@ -9,6 +9,7 @@ import re
 import nltk
 import asyncio
 import discord
+import textwrap
 
 # NLTK Download Data
 # ------------------
@@ -137,7 +138,7 @@ class MotherNatureCommands(object):
       if not channel:
         return
 
-      await channel.send("\n".join(self.__list_commands__))
+      await channel.send("```" + "\n".join(self.__list_commands__) + "```")
 
     async def check_fda_color_status(self):
 
@@ -281,16 +282,17 @@ class MotherNatureCommands(object):
       entries = {}
       _ = [ entries.setdefault(i.strip(), '') for i in text_message.split(",") ]
       template_string = '''
-      Node to be added to the Knowledge Graph
-      ```python
-            class %s(object):
-                def __init__(self):
-                    self.name == '%s'
-                @staticmethod
-                def get_smiles():
-                  smiles =  %s
-                  return smiles
-      ```
+    Node to be added to the Knowledge Graph
+    ```python
+    
+          class %s(object):
+              def __init__(self):
+                  self.name == '%s'
+              @staticmethod
+              def get_smiles():
+                smiles =  %s
+                return smiles
+    ```
           ''' % (node_class_name,
       node_name,
       entries
@@ -298,7 +300,7 @@ class MotherNatureCommands(object):
 
       self.global_chem_repo.create_issue(
       title='Create Graph Node: %s' % node_class_name,
-      body=template_string,
+      body=textwrap.dedent(template_string),
       assignee="Sulstice"
     )
       
