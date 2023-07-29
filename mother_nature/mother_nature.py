@@ -285,13 +285,14 @@ class MotherNatureCommands(object):
     Node to be added to the Knowledge Graph
     ```python
     
-          class %s(object):
-              def __init__(self):
-                  self.name == '%s'
-              @staticmethod
-              def get_smiles():
-                smiles =  %s
-                return smiles
+    class %s(object):
+        def __init__(self):
+            self.name == '%s'
+        
+        @staticmethod
+        def get_smiles():
+            smiles =  %s
+            return smiles
     ```
           ''' % (node_class_name,
       node_name,
