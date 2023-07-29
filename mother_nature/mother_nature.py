@@ -9,6 +9,7 @@ import re
 import nltk
 import asyncio
 import discord
+import textwrap
 
 # NLTK Download Data
 # ------------------
@@ -299,7 +300,7 @@ class MotherNatureCommands(object):
 
       self.global_chem_repo.create_issue(
       title='Create Graph Node: %s' % node_class_name,
-      body=template_string,
+      body=textwrap.dedent(template_string),
       assignee="Sulstice"
     )
       
