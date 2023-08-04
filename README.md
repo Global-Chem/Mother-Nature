@@ -17,6 +17,11 @@ things.
 
 Please Join Our Discord to try it out and to leave any feedback:
 
+| [User account](#user-account) | [Server invite](#server-invite) | [Bot account](#bot-account) |
+|:-:|:-:|:-:|
+| ![](https://dcbadge.vercel.app/api/shield/562726584272814092) | [![](https://dcbadge.vercel.app/api/server/global-chem)](https://discord.gg/global-chem) | Mother Nature Online | 
+
+
 https://discord.gg/global-chem
  
 Public Channels & Permissions
