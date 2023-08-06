@@ -10,7 +10,7 @@ Please Join Our Discord to try it out and to leave any feedback:
 |:-:|:-:|:-:|
 | ![](https://dcbadge.vercel.app/api/shield/562726584272814092) | [![](https://dcbadge.vercel.app/api/server/global-chem)](https://discord.gg/global-chem) | [![saythanks](https://img.shields.io/badge/Technical-Documentation-ff69b4.svg)](https://globalchem.gitbook.io/mother-nature/) | 
 
-![623d94fd33a658c54a05789a_mother nature ](https://github.com/Global-Chem/bots/assets/11812946/970dbb2a-b8b8-44d6-a58f-eb51bfcc84e5)
+![623d94fd33a658c54a05789a_mother nature ](https://github.com/Global-Chem/Mother-Nature/assets/11812946/e0f412ee-0e7a-47b4-81f3-8b68cc22bb41)
 
 Introduction
 ============
