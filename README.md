@@ -4,8 +4,6 @@ Mother Nature: An Open Source Generative Chemical Artificial Intelligence ChatBo
 Welcome to Mother Nature! Mother Nature is generative Artificial Intelligence ChatBot for the Open Source Community to Interact and Build Molecules Together
 while the chatbot learns from the people. 
 
-Please Join Our Discord to try it out and to leave any feedback:
-
 | [Admins Account](#user-account) | [Server invite](#server-invite) | Documentation |
 |:-:|:-:|:-:|
 | ![](https://dcbadge.vercel.app/api/shield/562726584272814092) | [![](https://dcbadge.vercel.app/api/server/global-chem)](https://discord.gg/global-chem) | [![saythanks](https://img.shields.io/badge/Technical-Documentation-ff69b4.svg)](https://globalchem.gitbook.io/mother-nature/) | 
@@ -18,6 +16,8 @@ Introduction
 Mother Nature is designed using the Recurrent Neural Network Program, REINVENT, that learns from chemicals separated into different categories according to GlobalChem. 
 Each Category is assigned a discord channel in which community users can interact with the chat system and find, design, and learn about chemicals for different general
 things. 
+
+Please Join Our Discord to try it out and to leave any feedback.
 
 Public Channels & Permissions
 =============================
