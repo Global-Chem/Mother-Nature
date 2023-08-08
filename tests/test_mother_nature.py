@@ -4,12 +4,52 @@
 #
 # ------------------------------------------------
 
-# imports
-# -------
+# Python Internals
+# ----------------
+import os
 
-from mother_nature import MotherNature
+# Python Externals
+# ----------------
 
-def test_initializa_class():
+import nltk
+import discord
+import datetime
+from dotenv import load_dotenv
+
+# Discord Imports
+# ---------------
+
+from discord.ext import commands
+from discord import app_commands
+
+# Github Imports
+# --------------
+
+from github import Github
+
+# Mother Nature Imports
+# ---------------------
+
+from mother_nature.mother_nature import MotherNatureCommands
+
+load_dotenv()
+GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
+DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
+
+github = Github(GITHUB_TOKEN)
+repo = github.get_repo("Global-Chem/private-workers")
+global_chem_repo = github.get_repo("Global-Chem/global-chem")
+
+intents = discord.Intents.default()
+intents.message_content = True
+client = discord.Client(intents=intents)
+
+channel = discord.utils.get(client.get_all_channels(), name='cannabis')
+
+bot = commands.Bot(command_prefix='$', intents=intents)
+bot = app_commands.CommandTree(client)
+
+def test_initialize_class():
 
     '''
 
@@ -17,7 +57,15 @@ def test_initializa_class():
 
     '''
 
-    mother_nature = MotherNature()
+    mother_nature = MotherNatureCommands(
+      github=github,
+      repo=repo,
+      global_chem_repo=global_chem_repo,
+      client=client,
+      bot=bot
+    )
+
+    assert mother_nature
 
 def test_get_channel():
 
@@ -27,8 +75,15 @@ def test_get_channel():
 
     '''
 
-    mother_nature = MotherNature()
-    mother_nature = 
+    mother_nature = MotherNatureCommands(
+      github=github,
+      repo=repo,
+      global_chem_repo=global_chem_repo,
+      client=client,
+      bot=bot
+    )
+
+    mother_nature.get_channel('cannabis')
 
 def test_get_channel_history():
 
@@ -38,11 +93,15 @@ def test_get_channel_history():
 
     '''
 
-    gc = GlobalChem()
-    nodes_list = gc.check_available_nodes()
+    mother_nature = MotherNatureCommands(
+      github=github,
+      repo=repo,
+      global_chem_repo=global_chem_repo,
+      client=client,
+      bot=bot
+    )
 
-    assert len(nodes_list) > 0
-    assert 'emerging_perfluoroalkyls' in nodes_list
+    history = mother_nature.get_channel_history('cannabis', '01/01/2000', False)
 
 def test_get_commands():
 
@@ -52,11 +111,15 @@ def test_get_commands():
 
     '''
 
-    gc = GlobalChem()
-    gc.build_global_chem_network(print_output=True)
-    molecules = gc.get_node_smiles('emerging_perfluoroalkyls')
+    mother_nature = MotherNatureCommands(
+      github=github,
+      repo=repo,
+      global_chem_repo=global_chem_repo,
+      client=client,
+      bot=bot
+    )
 
-    assert len(molecules) > 0
+    mother_nature.get_commands('playground-tests')
 
 def test_check_fda_status():
 
@@ -66,6 +129,16 @@ def test_check_fda_status():
 
     '''
 
+    mother_nature = MotherNatureCommands(
+      github=github,
+      repo=repo,
+      global_chem_repo=global_chem_repo,
+      client=client,
+      bot=bot
+    )
+
+    mother_nature.check_fda_color_status()
+
 def test_edit_smile():
 
     '''
@@ -74,6 +147,14 @@ def test_edit_smile():
 
     '''
 
+    mother_nature = MotherNatureCommands(
+      github=github,
+      repo=repo,
+      global_chem_repo=global_chem_repo,
+      client=client,
+      bot=bot
+    )
+
 def test_is_color_legal():
 
     '''
@@ -81,7 +162,15 @@ def test_is_color_legal():
     Test Whether the Color is Legal accoridng to the FDA
 
     '''
-  
+
+    mother_nature = MotherNatureCommands(
+      github=github,
+      repo=repo,
+      global_chem_repo=global_chem_repo,
+      client=client,
+      bot=bot
+    )
+
 def test_make_issue_arbitrer():
 
     '''
@@ -89,6 +178,14 @@ def test_make_issue_arbitrer():
     Test The Making of The Issue of the Role Arbiterer
 
     '''
+
+    mother_nature = MotherNatureCommands(
+      github=github,
+      repo=repo,
+      global_chem_repo=global_chem_repo,
+      client=client,
+      bot=bot
+    )
 
 def test_make_issue_lorax():
 
@@ -98,6 +195,13 @@ def test_make_issue_lorax():
 
     '''
 
+    mother_nature = MotherNatureCommands(
+      github=github,
+      repo=repo,
+      global_chem_repo=global_chem_repo,
+      client=client,
+      bot=bot
+    )
 
 def test_create_issue():
 
@@ -107,6 +211,14 @@ def test_create_issue():
 
     '''
 
+    mother_nature = MotherNatureCommands(
+      github=github,
+      repo=repo,
+      global_chem_repo=global_chem_repo,
+      client=client,
+      bot=bot
+    )
+
 def test_create_graph_node():
 
     '''
@@ -115,13 +227,31 @@ def test_create_graph_node():
 
     '''
 
+    mother_nature = MotherNatureCommands(
+      github=github,
+      repo=repo,
+      global_chem_repo=global_chem_repo,
+      client=client,
+      bot=bot
+    )
+    
+    mother_nature.create_graph_node('Test', 'test')
+
 def test_add_smile_file():
 
     '''
 
-    Test The Addition of a SMILES from the training set 
+    Test The Addition of a SMILES from the training set
 
     '''
+
+    mother_nature = MotherNatureCommands(
+      github=github,
+      repo=repo,
+      global_chem_repo=global_chem_repo,
+      client=client,
+      bot=bot
+    )
 
 def test_remove_smile_file():
 
@@ -131,6 +261,13 @@ def test_remove_smile_file():
 
     '''
 
+    mother_nature = MotherNatureCommands(
+      github=github,
+      repo=repo,
+      global_chem_repo=global_chem_repo,
+      client=client,
+      bot=bot
+    )
 
 def test_retraining():
 
@@ -139,6 +276,15 @@ def test_retraining():
     Test The Retraining of the Mother Nature on a Channel
 
     '''
+
+    mother_nature = MotherNatureCommands(
+      github=github,
+      repo=repo,
+      global_chem_repo=global_chem_repo,
+      client=client,
+      bot=bot
+    )
+
 def test_fetching_training_data():
 
     '''
@@ -146,6 +292,14 @@ def test_fetching_training_data():
     Test The Fetching of a Training Data
 
     '''
+
+    mother_nature = MotherNatureCommands(
+      github=github,
+      repo=repo,
+      global_chem_repo=global_chem_repo,
+      client=client,
+      bot=bot
+    )
 
 def test_filing_issue():
 
@@ -155,3 +309,10 @@ def test_filing_issue():
 
     '''
 
+    mother_nature = MotherNatureCommands(
+      github=github,
+      repo=repo,
+      global_chem_repo=global_chem_repo,
+      client=client,
+      bot=bot
+    )
