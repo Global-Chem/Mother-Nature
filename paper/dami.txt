@@ -1,3 +1,20 @@
+#New
+Recurrent Neural Networks (RNNs) possess a unique ability to discern connections and detect patterns within datasets, making them particularly valuable when the sequence or order of data holds significance. An RNN comprises a generative model that learns a probability distribution from a large dataset containing language composed of letters and words. This acquired knowledge empowers the model to identify errors within the language it generates.
+
+In the realm of molecular science, RNNs have been applied to datasets of SMILES, a symbolic representation of molecules. Notably, Segler et al. (2018) pioneered the concept of training an RNN on a SMILES list and demonstrated its proficiency in generating valid molecules. Moreover, through retraining the RNN with active compounds, it can craft novel molecules tailored to a specific biological target.
+
+REINVENT, a specialized RNN, encompasses two interconnected networks: the Prior Network and the Agent Network. The Prior Network is appropriately named as it undergoes initial training to comprehend the intricate patterns and structural configurations of molecules. It was primed with canonical SMILES from the Chembl database, specifically focusing on molecules containing 10 to 50 heavy atoms and elements. Training utilized a stochastic gradient descent, with gradients bounded within the range of [-3,3], influencing the network's weight adjustments.
+
+Predicting the subsequent sequence involves sampling the next token based on the learned probability distribution, effectively following the conditional probabilities derived from the training dataset. The Agent Network, another RNN, is trained based on a chemical input (a list of SMILES of interest) to generate molecules. It harmonizes its generation with the Prior's policy, which guides the correct molecular configuration. The Agent Network complements the Prior Network, enabling the synthesis of molecules possessing specific properties while conforming to structural integrity.
+
+The molecule generation process commences by validating a generated molecule using the RDKIT module, which verifies its structural feasibility. Subsequently, the Tanimoto fingerprint similarity evaluates its resemblance to molecules within the chemical repository. This similarity assessment confirms its status as a generative descendant from the chemical list input.
+
+To heighten the model's effectiveness, the integration of user input into the SMILES list of interest has been strategically undertaken. This incorporation is driven by user intuition, empowering users to actively contribute and manipulate the dataset. REINVENT's training dynamics are modulated by commands that control chemical input, facilitating retraining cycles on a weekly basis. Through a collaborative and open-source Discord forum, users can engage in discussions, participate in the addition or removal of SMILES, and explore diverse categories related to various chemical lists.
+
+
+
+#stop new
+
 Neural Networks possess a distinctive capability to identify relationships and detect patterns within datasets. 
 
 # Start off with a Recurent Neural Network - 
