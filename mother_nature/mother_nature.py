@@ -43,7 +43,12 @@ class MotherNatureCommands(object):
       "create_issue_lorax",         # Creates a Github Issue with the Lorax
       "create_issue_arbiter",       # Creates a Github Issue with Arbitrer Status
       "check_fda_color_status",     # Checks the FDA Color Status
-      "edit_smile_file"             # Edit a Smile File
+      "add_smile_file",             # Adds the given SMILE to the list of SMILES for that category
+      "remove_smile_file",          # Removes the SMILE at the given index in the list of SMILES for that category
+      "retrain_mother_nature",      # Retrains Mother Nature
+      "create_graph_node",          # Creates a new graph node in Global Chem repo
+      "fetch_training_set",         # Fetches the training set for the given category
+      "file_issue"                  # Creates an issue on Global Chem repo
     ]
 
     __langchain_keywords__ = [
@@ -156,22 +161,6 @@ class MotherNatureCommands(object):
       bot.get_global_chem_lists()
 
       return bot.check_list_status()
-
-    async def edit_smile_file(self, smile):
-
-      '''
-
-      Edits and Removes a SMILES based on the index.
-
-      Arguments:
-          smile (Int): Number Index of which smiles to remove from the list.
-
-      Event:
-          Create issue
-      '''
-
-      label = self.repo.get_label("enhancement")
-      self.repo.create_issue(title="SMILE_edit Run", labels=[label], body=smile, assignee="Sulstice")
 
     async def is_color_legal(self, channel_name, chemical_name):
 
@@ -306,7 +295,6 @@ class MotherNatureCommands(object):
     )
       
     async def add_smile_file(self, smile_index, channel_name):
-      channel = self.get_channel(channel_name)
       label = self.repo.get_label("add_smile_%s" % channel_name)
       self.repo.create_issue(title="SMILE edit Run", labels=[label], body=str(smile_index), assignee="Sulstice")
 

@@ -205,6 +205,7 @@ def test_create_issue():
       client=client,
       bot=bot
     )
+    mother_nature.create_issue(mother_nature.get_channel("cannabis"), "cannabis")
 
 def test_create_graph_node():
 

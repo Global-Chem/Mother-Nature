@@ -38,10 +38,11 @@ Mother Nature Interactions
     get_commands (Command): Get's the List of Commands available to the user.
     color_legal (Command): Determine if the color is legal in the United States FDA
     check_fda_status (Command): Check the FDA Colour status
-    edit_smile_file (Command): Edit the Smile File based on a user removal
     github_issue (Command): Issue a Github Issue
     make_issue_lorax (Command): Make a issue for the Generative AI without permissions for War and Narcotics
-    make_issue_arbitrer (Command): If you have this role then it's the issue including All chemical lists as well as Genral.
+    make_issue_arbitrer (Command): If you have this role then it's the issue including All chemical lists as well as General.
+    add_smile_file (Command): 
+    remove_smile_file (Command): 
 
 '''
 
