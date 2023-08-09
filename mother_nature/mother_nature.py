@@ -319,6 +319,9 @@ class MotherNatureCommands(object):
       label = self.repo.get_label("fetch_%s" % training_set)
       self.repo.create_issue(title="Fetch_Training_Set", labels=[label], assignee="Sulstice")
 
-    async def file_issue(self, title, issue):
+    async def file_issue(self, channel_name, title, issue):
       label = self.repo.get_label("user_reported")
       self.repo.create_issue(title=title, labels=[label], body=issue, assignee="Sulstice")
+
+      channel = self.get_channel(channel_name)
+      channel.send(title + "\n" + issue)

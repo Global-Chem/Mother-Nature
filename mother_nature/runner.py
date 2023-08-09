@@ -153,6 +153,6 @@ async def fetch_training_set(ctx, category: str):
 @bot.command(name='file_issue',description=command_names['file_issue'], guild=discord.Object(id=996592811887579317))
 async def file_issue(ctx, title: str, issue: str):
   await ctx.response.send_message("Filing issue now...")
-  await mother_nature.file_issue(title, issue)
+  await mother_nature.file_issue(ctx.channel.name, title, issue)
 
 client.run(DISCORD_TOKEN)
