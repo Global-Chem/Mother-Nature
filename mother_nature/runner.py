@@ -120,9 +120,9 @@ async def remove_smile_file(ctx, smile_index: int):
   await mother_nature.remove_smile_file(smile_index, ctx.channel.name)
 
 @bot.command(name='add_smile_file', description=command_names['add_smile_file'], guild=guild_object)
-async def add_smile_file(ctx, smile_index: int):
+async def add_smile_file(ctx, smile: str):
   await ctx.response.send_message("Editing file now...")
-  await mother_nature.add_smile_file(smile_index, ctx.channel.name)
+  await mother_nature.add_smile_file(smile, ctx.channel.name)
 
 @bot.command(name='retrain_mother_nature', description=command_names['retrain'], guild=guild_object)
 async def retrain(ctx, retrain_again: bool):
