@@ -116,19 +116,21 @@ async def check_color_status(ctx):
   await ctx.response.send_message(await mother_nature.check_fda_color_status())
 
 @bot.command(name='remove_smile_file', description=command_names['remove_smile_file'], guild=guild_object)
-async def remove_smile_file(ctx, smile_index: int):
+async def remove_smile_file(ctx, smile_index: int, categories:str):
   await ctx.response.send_message("Editing file now...")
-  await mother_nature.remove_smile_file(smile_index, ctx.channel.name)
+  await mother_nature.remove_smile_file(smile_index, categories)
 
 @bot.command(name='add_smile_file', description=command_names['add_smile_file'], guild=guild_object)
-async def add_smile_file(ctx, smile: str):
+async def add_smile_file(ctx, smile: str, categories: str):
   await ctx.response.send_message("Editing file now...")
-  await mother_nature.add_smile_file(smile, ctx.channel.name)
+  await mother_nature.add_smile_file(smile, categories)
 
 @bot.command(name='retrain_mother_nature', description=command_names['retrain'], guild=guild_object)
-async def retrain(ctx, retrain_again: bool):
+async def retrain(ctx, retrain_again: bool, channel_name=None):
   await ctx.response.send_message("Retraining now...")
-  await mother_nature.retrain(ctx.channel.name, retrain_again)
+  if not channel_name:
+    channel_name = ctx.channel.name
+  await mother_nature.retrain(channel_name, retrain_again)
 
 @bot.command(name='make_github_issue_lorax', description=command_names['make_github_issue_lorax'], guild=guild_object)
 async def make_github_issue_lorax(ctx, channel_name: str):
@@ -146,9 +148,9 @@ async def create_graph_node(ctx, node_class_name: str, text_message: str):
   await mother_nature.create_graph_node(node_class_name, text_message)
 
 @bot.command(name='fetch_training_set', description=command_names['fetch_training_set'], guild=discord.Object(id=996592811887579317))
-async def fetch_training_set(ctx, category: str):
+async def fetch_training_set(ctx, categories: str):
   await ctx.response.send_message("Fetching data...")
-  await mother_nature.fetch_training_set(category)
+  await mother_nature.fetch_training_set(categories)
 
 @bot.command(name='file_issue',description=command_names['file_issue'], guild=discord.Object(id=996592811887579317))
 async def file_issue(ctx, title: str, issue: str):
