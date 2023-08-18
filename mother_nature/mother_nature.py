@@ -57,9 +57,9 @@ class MotherNatureCommands(object):
 
     __category_keywords__ = [
       'solar cells', 'cannabis', 'war', 'sex',
-      'education', 'medicinal chemistry', 'food',
+      'education', 'medicinal_chemistry', 'food',
       'environment',  'space', 'narcotics', 'global',
-      'contraceptives', 'materials', 'performance enhancements'
+      'contraceptives', 'materials', 'performance_enhancements'
     ]
 
     def __init__(self, github, repo, global_chem_repo, client, bot):
