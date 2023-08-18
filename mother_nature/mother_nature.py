@@ -308,11 +308,11 @@ class MotherNatureCommands(object):
       self.repo.create_issue(title="SMILE edit Run", labels=label, body=str(smile_index), assignee="Sulstice")
       
     async def retrain(self, channel_name, retrain_again):
+      label = []
       for keyword in self.__category_keywords__:
         if keyword in channel_name:
-          channel = self.get_channel(keyword)
-          label = self.repo.get_label("retrain_%s" % keyword)
-          self.repo.create_issue(title="SMILE edit Run", labels=[label], assignee="Sulstice")
+          label.append(self.repo.get_label("retrain_%s" % keyword))  
+          self.repo.create_issue(title="SMILE edit Run", labels=label, assignee="Sulstice")
       if retrain_again == False:
         return
       await asyncio.sleep(518400)
