@@ -297,15 +297,15 @@ class MotherNatureCommands(object):
       label = []
       for keyword in self.__category_keywords__:
         if keyword in categories:
-          label.add(self.repo.get_label("add_smile_%s" % keyword))
-          self.repo.create_issue(title="SMILE edit Run", labels=label, body=smile, assignee="Sulstice")
+          label.append(self.repo.get_label("add_smile_%s" % keyword))
+      self.repo.create_issue(title="SMILE edit Run", labels=label, body=smile, assignee="Sulstice")
 
     async def remove_smile_file(self, smile_index, categories):
       label = []
       for keyword in self.__category_keywords__:
         if keyword in categories:
-          label.add(self.repo.get_label("remove_smile_%s" % keyword))
-          self.repo.create_issue(title="SMILE edit Run", labels=label, body=str(smile_index), assignee="Sulstice")
+          label.append(self.repo.get_label("remove_smile_%s" % keyword))
+      self.repo.create_issue(title="SMILE edit Run", labels=label, body=str(smile_index), assignee="Sulstice")
       
     async def retrain(self, channel_name, retrain_again):
       for keyword in self.__category_keywords__:
