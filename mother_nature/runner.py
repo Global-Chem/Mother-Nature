@@ -126,7 +126,7 @@ async def add_smile_file(ctx, smile: str, categories: str):
   await mother_nature.add_smile_file(smile, categories)
 
 @bot.command(name='retrain_mother_nature', description=command_names['retrain'], guild=guild_object)
-async def retrain(ctx, retrain_again: bool, channel_name=None):
+async def retrain(ctx, retrain_again: bool, channel_name: typing.Optional[str]=None):
   await ctx.response.send_message("Retraining now...")
   if not channel_name:
     channel_name = ctx.channel.name
