@@ -311,7 +311,7 @@ class MotherNatureCommands(object):
       for keyword in self.__category_keywords__:
         if keyword in channel_name:
           channel = self.get_channel(keyword)
-          label = self.repo.get_label("retrain_%s" % channel_name)
+          label = self.repo.get_label("retrain_%s" % keyword)
           self.repo.create_issue(title="SMILE edit Run", labels=[label], assignee="Sulstice")
       if retrain_again == False:
         return
