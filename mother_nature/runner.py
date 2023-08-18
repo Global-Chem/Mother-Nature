@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 # Discord Imports
 # ---------------
 
+import typing
 from discord.ext import commands
 from discord import app_commands
 
