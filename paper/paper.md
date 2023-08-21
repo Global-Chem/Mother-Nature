@@ -1,5 +1,5 @@
 ---
-title: 'Mother Nature: An Open Source Generative Chemical Artificial Intelligence ChatBot!'
+title: 'Mother Nature: An Open Source Generative Chemical Artificial Intelligence ChatBot'
 tags:
   - Python
   - Cheminformatics
