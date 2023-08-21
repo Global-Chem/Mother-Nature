@@ -14,13 +14,13 @@ authors:
     affiliation: 1
   - name: Jonas Xavier Roper
     affiliation: 1
-  - name: Josh Farrell
+  - name: Josh Farrell*
     orcid: 0000-0002-1342-9258
     affiliation: 1
-  - name: Lauren Angulo
+  - name: Lauren Angulo*
     orcid: 0000-0002-1342-9258
     affiliation: 1
-  - name: Suliman Sharif
+  - name: Suliman Sharif*
     orcid: 0000-0002-1342-9258
     affiliation: 1
 affiliations:
