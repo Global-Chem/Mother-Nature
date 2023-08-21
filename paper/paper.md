@@ -32,7 +32,7 @@ Generative Artifical Intelligence (AI) Programs for chemistry are emerging as co
 
 <img width="1133" alt="Screenshot 2023-08-21 at 9 26 56 AM" src="https://github.com/Global-Chem/Mother-Nature/assets/11812946/41d2bd14-77b4-4d5b-9677-b152ba151c25">
 
-In Figure 1, users can pick which classes or chemicals to include in the training set. A Prior network then establishes a policy for that specific chemical list. Each Agent that then generates new compounds and updates the policy on the Agent per iteration when discovering new chemicals. Users can then decide if a molecule is appropiate or not for testing. Visual feedback on the molecular design fragments generated can be altered based on whether or not the community decides they want to include them in the retraining the policy for that category. 
+In Figure 1, users can pick which classes or chemicals to include in the training set. A Prior network then establishes a policy for that specific chemical list. Each Agent that then generates new compounds and updates the policy on the Agent per iteration when discovering new chemicals. Users can then decide if a molecule is appropiate or not for testing. Visual feedback on the molecular design fragments generated can be altered based on whether or not the community decides they want to include them in the retraining the policy for that category. This enables guided generative design through latent chemical space for compounds we select as valuable for further testing.
 
 # Conclusion
 
@@ -46,6 +46,6 @@ for the general public to enjoy.
 
 # Acknowledgements
 
-We acknowledge contributions from Josh Farrell as a consultation.
+We acknowledge financial contributions from the Standard Seed Corporation for the development of this project.  
 
 # References
