@@ -12,6 +12,8 @@ authors:
     affiliation: 1
   - name: Bodun Damilola
     affiliation: 1
+  - name: Jonas Xavier Roper
+    affiliation: 1
   - name: Josh Farrell
     orcid: 0000-0002-1342-9258
     affiliation: 1
