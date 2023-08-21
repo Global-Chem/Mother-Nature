@@ -10,11 +10,19 @@ authors:
   - name: Sevie Schulhoff
     orcid: 0000-0002-1342-9258
     affiliation: 1
+  - name: Bodun Damilola
+    affiliation: 1
+  - name: Josh Farrell
+    orcid: 0000-0002-1342-9258
+    affiliation: 1
+  - name: Lauren Angulo
+    orcid: 0000-0002-1342-9258
+    affiliation: 1
   - name: Suliman Sharif
     orcid: 0000-0002-1342-9258
     affiliation: 1
 affiliations:
- - name: None
+ - name: Standard Seed Corporation
    index: 1
 date: 08/06/2023
 bibliography: paper.bib
