@@ -18,10 +18,10 @@ authors:
     orcid: 0000-0002-1342-9258
     affiliation: 1
   - name: Lauren Angulo
-    orcid: 0000-0002-1342-9258
+    orcid: 0009-0001-9472-9606
     affiliation: 1
   - name: Josh Farrell*
-    orcid: 0000-0002-1342-9258
+    orcid: 0009-0008-8314-7062
     affiliation: 1
 affiliations:
  - name: Standard Seed Corporation
