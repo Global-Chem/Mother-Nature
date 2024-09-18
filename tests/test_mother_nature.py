@@ -162,7 +162,7 @@ def test_is_color_legal():
     Test Whether the Color is Legal accoridng to the FDA
 
     '''
-
+    
     mother_nature = MotherNatureCommands(
       github=github,
       repo=repo,
@@ -234,7 +234,7 @@ def test_create_graph_node():
       client=client,
       bot=bot
     )
-    
+
     mother_nature.create_graph_node('Test', 'test')
 
 def test_add_smile_file():
