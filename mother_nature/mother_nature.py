@@ -29,7 +29,7 @@ from discord import app_commands
 # --------------
 
 from github import Github
-from color_legal import BotColourAdditiveList
+from mother_nature.color_legal import BotColourAdditiveList
 
 class MotherNatureCommands(object):
 
@@ -40,8 +40,7 @@ class MotherNatureCommands(object):
       "commands",                   # Gets the List of Commands
       "help",                       # Gets a Help Message
       "is_color_legal",             # Checks to see if a color is in the  legal color list
-      "create_issue_lorax",         # Creates a Github Issue with the Lorax
-      "create_issue_arbiter",       # Creates a Github Issue with Arbitrer Status
+      "generate_new_chemicals",     # Creates a Github Issue
       "check_fda_color_status",     # Checks the FDA Color Status
       "edit_smile_file"             # Edit a Smile File
     ]
@@ -203,32 +202,7 @@ class MotherNatureCommands(object):
       else:
         return (chemical_name + " is not in the FDA color list")
 
-    async def make_issue_arbiter(self, channel_name, message):
-
-      '''
-
-      Allows the ability to make an issue and use the generative AI to build molecules.
-
-      Arguments:
-          channel_name (String): String of the Channel Name
-          message (String):  Which action to take in terms of creating or retraining the AI system for that branch.
-
-      Returns:
-          Discord Message (String): Whether the Chemical Name is part of the List.
-
-      '''
-
-      channel = self.get_channel(channel_name)
-      text_message = message.lower()
-      if not channel:
-          return
-
-      for keyword in self.__category_keywords__:
-        if keyword in text_message:
-          await self.create_issue(channel, keyword=keyword)
-
-
-    async def make_issue_lorax(self, channel_name, message):
+    async def generate_new_chemicals(self, channel_name, message):
 
       '''
 
@@ -274,9 +248,6 @@ class MotherNatureCommands(object):
       label = self.repo.get_label("run_%s" % keyword)
       self.repo.create_issue(title="%s Run" %keyword, labels=[label], assignee="Sulstice")
 
-    smiles = {'arachidic': '', 'arachidic': '',}
-
-
     async def create_graph_node(self, node_class_name, text_message):
       node_name = node_class_name.lower()
       entries = {}
@@ -284,11 +255,11 @@ class MotherNatureCommands(object):
       template_string = '''
     Node to be added to the Knowledge Graph
     ```python
-    
+
     class %s(object):
         def __init__(self):
             self.name == '%s'
-        
+
         @staticmethod
         def get_smiles():
             smiles =  %s
@@ -304,7 +275,7 @@ class MotherNatureCommands(object):
       body=textwrap.dedent(template_string),
       assignee="Sulstice"
     )
-      
+
     async def add_smile_file(self, smile_index, channel_name):
       channel = self.get_channel(channel_name)
       label = self.repo.get_label("add_smile_%s" % channel_name)
@@ -313,7 +284,7 @@ class MotherNatureCommands(object):
     async def remove_smile_file(self, smile_index, channel_name):
       label = self.repo.get_label("remove_smile_%s" % channel_name)
       self.repo.create_issue(title="SMILE edit Run", labels=[label], body=str(smile_index), assignee="Sulstice")
-      
+
     async def retrain(self, channel_name, retrain_again):
       channel = self.get_channel(channel_name)
       label = self.repo.get_label("retrain_%s" % channel_name)

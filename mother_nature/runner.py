@@ -40,8 +40,7 @@ Mother Nature Interactions
     check_fda_status (Command): Check the FDA Colour status
     edit_smile_file (Command): Edit the Smile File based on a user removal
     github_issue (Command): Issue a Github Issue
-    make_issue_lorax (Command): Make a issue for the Generative AI without permissions for War and Narcotics
-    make_issue_arbitrer (Command): If you have this role then it's the issue including All chemical lists as well as Genral.
+    generate_new_chemicals (Command): Make a issue for the Generative AI without permissions for War and Narcotics
 
 '''
 
@@ -76,8 +75,7 @@ command_names = {
   'commands': 'prints all commands',
   'is_color_legal': 'checks if a food coloring is legal according to the FDA',
   'check_fda_color_status': 'checks if a food coloring is legal according to the FDA',
-  'make_github_issue_lorax': 'creates new chemical compounds',
-  'make_github_issue_arbiter': 'creates new chemical compounds',
+  'generate_new_chemicals': 'creates new chemical compounds',
   'add_smile_file': 'adds a smile to the smile file for training mother nature',
   'remove_smile_file': 'removes a smile from the smile file for training mother nature',
   'retrain': 'retrains mother nature bot ',
@@ -87,10 +85,10 @@ command_names = {
 }
 
 mother_nature = MotherNatureCommands(
-  github=github, 
-  repo=repo, 
+  github=github,
+  repo=repo,
   global_chem_repo=global_chem_repo,
-  client=client, 
+  client=client,
   bot=bot
 )
 
@@ -129,15 +127,10 @@ async def retrain(ctx, retrain_again: bool):
   await ctx.response.send_message("Retraining now...")
   await mother_nature.retrain(ctx.channel.name, retrain_again)
 
-@bot.command(name='make_github_issue_lorax', description=command_names['make_github_issue_lorax'], guild=guild_object)
-async def make_github_issue_lorax(ctx, channel_name: str):
-  await ctx.response.send_message("Do you speak for the trees, profound lorax?")
-  await mother_nature.make_issue_lorax(ctx.channel.name, channel_name)
-
-@bot.command(name='make_github_issue_arbiter', description=command_names['make_github_issue_arbiter'], guild=guild_object)
-async def make_github_issue_arbiter(ctx, channel_name: str):
-  await ctx.response.send_message("Have you discovered your secret power, o mighty arbiter?")
-  await mother_nature.make_issue_arbiter(ctx.channel.name, channel_name)
+@bot.command(name='generate_new_chemicals', description=command_names['generate_new_chemicals'], guild=guild_object)
+async def generate_new_chemicals(ctx, channel_name: str):
+  await ctx.response.send_message("Generating Compounds now Sul...")
+  await mother_nature.generate_new_chemicals(ctx.channel.name, channel_name)
 
 @bot.command(name='create_graph_node', description=command_names['create_graph_node'], guild=discord.Object(id=996592811887579317))
 async def create_graph_node(ctx, node_class_name: str, text_message: str):
