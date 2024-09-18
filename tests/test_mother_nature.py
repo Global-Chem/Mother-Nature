@@ -83,7 +83,7 @@ def test_get_channel():
       bot=bot
     )
 
-    mother_nature.get_channel('cannabis')
+    mother_nature.get_channel('bot-commands')
 
 def test_get_channel_history():
 
@@ -101,7 +101,7 @@ def test_get_channel_history():
       bot=bot
     )
 
-    history = mother_nature.get_channel_history('cannabis', '01/01/2000', False)
+    history = mother_nature.get_channel_history('bot-commands', '01/01/2000', False)
 
 def test_get_commands():
 
@@ -119,7 +119,7 @@ def test_get_commands():
       bot=bot
     )
 
-    mother_nature.get_commands('playground-tests')
+    mother_nature.get_commands('bot-commands')
 
 def test_check_fda_status():
 
@@ -137,23 +137,7 @@ def test_check_fda_status():
       bot=bot
     )
 
-    mother_nature.check_fda_color_status()
-
-def test_edit_smile():
-
-    '''
-
-    Test the Editing of the Smiles
-
-    '''
-
-    mother_nature = MotherNatureCommands(
-      github=github,
-      repo=repo,
-      global_chem_repo=global_chem_repo,
-      client=client,
-      bot=bot
-    )
+    mother_nature.check_fda_color_status(test=True)
 
 def test_is_color_legal():
 
@@ -170,6 +154,7 @@ def test_is_color_legal():
       client=client,
       bot=bot
     )
+    mother_nature.is_color_legal("bot-commands", "bronze powder", test=True)
 
 def test_make_issue_arbitrer():
 
@@ -186,6 +171,7 @@ def test_make_issue_arbitrer():
       client=client,
       bot=bot
     )
+    mother_nature.make_issue_arbiter("bot-commands", "cannabis")
 
 def test_make_issue_lorax():
 
@@ -202,6 +188,7 @@ def test_make_issue_lorax():
       client=client,
       bot=bot
     )
+    mother_nature.make_issue_lorax("bot-commands", "cannabis")
 
 def test_create_issue():
 
@@ -218,6 +205,7 @@ def test_create_issue():
       client=client,
       bot=bot
     )
+    mother_nature.create_issue(mother_nature.get_channel("cannabis"), "cannabis")
 
 def test_create_graph_node():
 
@@ -252,6 +240,7 @@ def test_add_smile_file():
       client=client,
       bot=bot
     )
+    mother_nature.add_smile_file("1", "cannabis")
 
 def test_remove_smile_file():
 
@@ -268,6 +257,7 @@ def test_remove_smile_file():
       client=client,
       bot=bot
     )
+    mother_nature.remove_smile_file("1", "cannabis")
 
 def test_retraining():
 
@@ -284,6 +274,7 @@ def test_retraining():
       client=client,
       bot=bot
     )
+    mother_nature.retrain("cannabis", False)
 
 def test_fetching_training_data():
 
@@ -300,6 +291,7 @@ def test_fetching_training_data():
       client=client,
       bot=bot
     )
+    mother_nature.fetch_training_set("cannabis")
 
 def test_filing_issue():
 
@@ -316,3 +308,4 @@ def test_filing_issue():
       client=client,
       bot=bot
     )
+    mother_nature.file_issue("Test", "Test")

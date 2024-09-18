@@ -42,7 +42,12 @@ class MotherNatureCommands(object):
       "is_color_legal",             # Checks to see if a color is in the  legal color list
       "generate_new_chemicals",     # Creates a Github Issue
       "check_fda_color_status",     # Checks the FDA Color Status
-      "edit_smile_file"             # Edit a Smile File
+      "add_smile_file",             # Adds the given SMILE to the list of SMILES for that category
+      "remove_smile_file",          # Removes the SMILE at the given index in the list of SMILES for that category
+      "retrain_mother_nature",      # Retrains Mother Nature
+      "create_graph_node",          # Creates a new graph node in Global Chem repo
+      "fetch_training_set",         # Fetches the training set for the given category
+      "file_issue"                  # Creates an issue on Global Chem repo
     ]
 
     __langchain_keywords__ = [
@@ -51,9 +56,9 @@ class MotherNatureCommands(object):
 
     __category_keywords__ = [
       'solar cells', 'cannabis', 'war', 'sex',
-      'education', 'medicinal chemistry', 'food',
+      'education', 'medicinal_chemistry', 'food',
       'environment',  'space', 'narcotics', 'global',
-      'contraceptives', 'materials', 'performance enhancements'
+      'contraceptives', 'materials', 'performance_enhancements'
     ]
 
     def __init__(self, github, repo, global_chem_repo, client, bot):
@@ -156,22 +161,6 @@ class MotherNatureCommands(object):
 
       return bot.check_list_status()
 
-    async def edit_smile_file(self, smile):
-
-      '''
-
-      Edits and Removes a SMILES based on the index.
-
-      Arguments:
-          smile (Int): Number Index of which smiles to remove from the list.
-
-      Event:
-          Create issue
-      '''
-
-      label = self.repo.get_label("enhancement")
-      self.repo.create_issue(title="SMILE_edit Run", labels=[label], body=smile, assignee="Sulstice")
-
     async def is_color_legal(self, channel_name, chemical_name):
 
       '''
@@ -202,11 +191,11 @@ class MotherNatureCommands(object):
       else:
         return (chemical_name + " is not in the FDA color list")
 
-    async def generate_new_chemicals(self, channel_name, message):
+    async def generate_new_chemicals(self, channel_name, categories):
 
       '''
 
-      Allows the ability to make an issue and use the generative AI to build molecules without War or Narcotics.
+      Allows the ability to make an issue and use the generative AI to build molecules.
 
       Arguments:
           channel_name (String): String of the Channel Name
@@ -219,15 +208,12 @@ class MotherNatureCommands(object):
 
       channel = self.get_channel(channel_name)
       if not channel:
-        return
+          return
 
-      text_message = message.lower()
+      text_message = categories.lower()
       for keyword in self.__category_keywords__:
         if keyword in text_message:
-          if keyword == "war" or keyword == "narcotics" or keyword == "performance enhancements":
-              await channel.send("You do not have the requisite permissions to use the %s keyword. You must have the role 'Arbiter of Nature' for the categories 'war', 'narcotics', and 'performance enhancements'." %keyword)
-          else:
-            await self.create_issue(channel, keyword=keyword)
+          await self.create_issue(channel, keyword=keyword)
 
     async def create_issue(self, channel, keyword):
 
@@ -275,6 +261,7 @@ class MotherNatureCommands(object):
       body=textwrap.dedent(template_string),
       assignee="Sulstice"
     )
+<<<<<<< HEAD
 
     async def add_smile_file(self, smile_index, channel_name):
       channel = self.get_channel(channel_name)
@@ -285,10 +272,29 @@ class MotherNatureCommands(object):
       label = self.repo.get_label("remove_smile_%s" % channel_name)
       self.repo.create_issue(title="SMILE edit Run", labels=[label], body=str(smile_index), assignee="Sulstice")
 
+=======
+
+    async def add_smile_file(self, smile, categories):
+      label = []
+      for keyword in self.__category_keywords__:
+        if keyword in categories:
+          label.append(self.repo.get_label("add_smile_%s" % keyword))
+      self.repo.create_issue(title="SMILE edit Run", labels=label, body=smile, assignee="Sulstice")
+
+    async def remove_smile_file(self, smile_index, categories):
+      label = []
+      for keyword in self.__category_keywords__:
+        if keyword in categories:
+          label.append(self.repo.get_label("remove_smile_%s" % keyword))
+      self.repo.create_issue(title="SMILE edit Run", labels=label, body=str(smile_index), assignee="Sulstice")
+
+>>>>>>> 78fa29dc7354d776a650143b93592933e904c86e
     async def retrain(self, channel_name, retrain_again):
-      channel = self.get_channel(channel_name)
-      label = self.repo.get_label("retrain_%s" % channel_name)
-      self.repo.create_issue(title="SMILE edit Run", labels=[label], assignee="Sulstice")
+      label = []
+      for keyword in self.__category_keywords__:
+        if keyword in channel_name:
+          label.append(self.repo.get_label("retrain_%s" % keyword))
+      self.repo.create_issue(title="SMILE edit Run", labels=label, assignee="Sulstice")
       if retrain_again == False:
         return
       await asyncio.sleep(518400)
@@ -299,9 +305,14 @@ class MotherNatureCommands(object):
       self.retrain(channel_name, retrain_again)
 
     async def fetch_training_set(self, training_set):
-      label = self.repo.get_label("fetch_%s" % training_set)
-      self.repo.create_issue(title="Fetch_Training_Set", labels=[label], assignee="Sulstice")
+      for keyword in self.__category_keywords__:
+        if keyword in training_set:
+          label = self.repo.get_label("fetch_%s" % training_set)
+          self.repo.create_issue(title="Fetch_Training_Set", labels=[label], assignee="Sulstice")
 
-    async def file_issue(self, title, issue):
+    async def file_issue(self, channel_name, title, issue):
       label = self.repo.get_label("user_reported")
       self.repo.create_issue(title=title, labels=[label], body=issue, assignee="Sulstice")
+
+      channel = self.get_channel(channel_name)
+      channel.send(title + "\n" + issue)

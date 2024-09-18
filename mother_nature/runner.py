@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 # Discord Imports
 # ---------------
 
+import typing
 from discord.ext import commands
 from discord import app_commands
 
@@ -38,9 +39,10 @@ Mother Nature Interactions
     get_commands (Command): Get's the List of Commands available to the user.
     color_legal (Command): Determine if the color is legal in the United States FDA
     check_fda_status (Command): Check the FDA Colour status
-    edit_smile_file (Command): Edit the Smile File based on a user removal
     github_issue (Command): Issue a Github Issue
     generate_new_chemicals (Command): Make a issue for the Generative AI without permissions for War and Narcotics
+    add_smile_file (Command):
+    remove_smile_file (Command):
 
 '''
 
@@ -113,19 +115,21 @@ async def check_color_status(ctx):
   await ctx.response.send_message(await mother_nature.check_fda_color_status())
 
 @bot.command(name='remove_smile_file', description=command_names['remove_smile_file'], guild=guild_object)
-async def remove_smile_file(ctx, smile_index: int):
+async def remove_smile_file(ctx, smile_index: int, categories:str):
   await ctx.response.send_message("Editing file now...")
-  await mother_nature.remove_smile_file(smile_index, ctx.channel.name)
+  await mother_nature.remove_smile_file(smile_index, categories)
 
 @bot.command(name='add_smile_file', description=command_names['add_smile_file'], guild=guild_object)
-async def add_smile_file(ctx, smile_index: int):
+async def add_smile_file(ctx, smile: str, categories: str):
   await ctx.response.send_message("Editing file now...")
-  await mother_nature.add_smile_file(smile_index, ctx.channel.name)
+  await mother_nature.add_smile_file(smile, categories)
 
 @bot.command(name='retrain_mother_nature', description=command_names['retrain'], guild=guild_object)
-async def retrain(ctx, retrain_again: bool):
+async def retrain(ctx, retrain_again: bool, channel_name: typing.Optional[str]=None):
   await ctx.response.send_message("Retraining now...")
-  await mother_nature.retrain(ctx.channel.name, retrain_again)
+  if not channel_name:
+    channel_name = ctx.channel.name
+  await mother_nature.retrain(channel_name, retrain_again)
 
 @bot.command(name='generate_new_chemicals', description=command_names['generate_new_chemicals'], guild=guild_object)
 async def generate_new_chemicals(ctx, channel_name: str):
@@ -138,13 +142,13 @@ async def create_graph_node(ctx, node_class_name: str, text_message: str):
   await mother_nature.create_graph_node(node_class_name, text_message)
 
 @bot.command(name='fetch_training_set', description=command_names['fetch_training_set'], guild=discord.Object(id=996592811887579317))
-async def fetch_training_set(ctx, category: str):
+async def fetch_training_set(ctx, categories: str):
   await ctx.response.send_message("Fetching data...")
-  await mother_nature.fetch_training_set(category)
+  await mother_nature.fetch_training_set(categories)
 
 @bot.command(name='file_issue',description=command_names['file_issue'], guild=discord.Object(id=996592811887579317))
 async def file_issue(ctx, title: str, issue: str):
   await ctx.response.send_message("Filing issue now...")
-  await mother_nature.file_issue(title, issue)
+  await mother_nature.file_issue(ctx.channel.name, title, issue)
 
 client.run(DISCORD_TOKEN)
