@@ -83,7 +83,10 @@ command_names = {
   'retrain': 'retrains mother nature bot ',
   'create_graph_node': 'creates a new node in the global chem graph',
   'fetch_training_set': 'fetches the training set and sends the image to the corresponding channel',
-  'file_issue': 'creates a github issue for something that needs fixing'
+  'file_issue': 'creates a github issue for something that needs fixing',
+  'give_feedback': 'Submit feedback about the bot',
+  'view_feedback':'View feedback submissions'
+
 }
 
 mother_nature = MotherNatureCommands(
@@ -150,5 +153,23 @@ async def fetch_training_set(ctx, categories: str):
 async def file_issue(ctx, title: str, issue: str):
   await ctx.response.send_message("Filing issue now...")
   await mother_nature.file_issue(ctx.channel.name, title, issue)
+
+@bot.command(name='give_feedback', description='Submit feedback about the bot', guild=guild_object)
+async def give_feedback(ctx, *, feedback: str):
+    """Command to collect feedback from users."""
+    user = str(ctx.author)  # Get username
+    await mother_nature.add_feedback(user, feedback)
+    await ctx.response.send_message("Thank you for your feedback!")
+
+@bot.command(name='view_feedback', description='View feedback submissions', guild=guild_object)
+@commands.has_permissions(administrator=True)
+async def view_feedback(ctx):
+    """Command for admins to view feedback."""
+    feedback = await mother_nature.get_feedback()
+    feedback_message = "Feedback submissions:\n"
+    for entry in feedback:
+        feedback_message += f"{entry[0]} | {entry[1]}: {entry[2]}\n"
+    
+    await ctx.response.send_message(feedback_message)  
 
 client.run(DISCORD_TOKEN)
