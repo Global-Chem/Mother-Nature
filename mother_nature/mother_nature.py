@@ -31,9 +31,6 @@ from discord import app_commands
 from github import Github
 from mother_nature.color_legal import BotColourAdditiveList
 
-# Import the FeedbackSystem
-from feedback_system import FeedbackSystem
-
 class MotherNatureCommands(object):
 
     __GUILD_ID__ = 996592811887579317
@@ -51,8 +48,6 @@ class MotherNatureCommands(object):
       "create_graph_node",          # Creates a new graph node in Global Chem repo
       "fetch_training_set",         # Fetches the training set for the given category
       "file_issue"                  # Creates an issue on Global Chem repo
-      "add_feedback",               # New command for adding feedback
-      "get_feedback"                # New command for retrieving feedback
     ]
 
     __langchain_keywords__ = [
@@ -74,7 +69,6 @@ class MotherNatureCommands(object):
 
         self.client = client
         self.bot = bot
-        self.feedback_system = FeedbackSystem()  # Initialize feedback system
 
     def get_channel(self, channel_name):
 
@@ -305,20 +299,3 @@ class MotherNatureCommands(object):
 
       channel = self.get_channel(channel_name)
       channel.send(title + "\n" + issue)
-
-    async def add_feedback(self, user: str, feedback: str):
-        """Add user feedback to the system."""
-      self.feedback_system.add_feedback(user, feedback)
-      channel = self.get_channel("feedback-channel")  # Replace with your feedback channel name
-      await channel.send(f"Thank you for your feedback, {user}!")
-
-    async def get_feedback(self):
-        """Retrieve user feedback and send it to the channel."""
-      feedback_list = self.feedback_system.get_feedback()
-      channel = self.get_channel("feedback-channel")  # Replace with your feedback channel name
-      if feedback_list:
-          feedback_messages = "\n".join([f"{feedback[0]} - {feedback[1]}: {feedback[2]}" for feedback in feedback_list])
-          await channel.send(f"Feedback received:\n{feedback_messages}")
-      else:
-          await channel.send("No feedback available.")
-
