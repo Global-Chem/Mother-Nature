@@ -27,6 +27,10 @@ from github import Github
 
 from mother_nature import MotherNatureCommands
 
+# REINVENT & Feedback Imports
+from reinvent import generate_molecules, retrain_model  
+from feedback import collect_feedback, process_feedback  
+
 '''
 
 Mother Nature Interactions
@@ -63,6 +67,28 @@ channel = discord.utils.get(client.get_all_channels(), name='cannabis')
 bot = commands.Bot(command_prefix='$', intents=intents)
 bot = app_commands.CommandTree(client)
 
+
+# ----------------- REINVENT Integration ----------------
+
+async def run_reinvent_with_feedback(ctx, channel_name: str):
+    # Step 1: Call REINVENT to generate molecules
+    await ctx.send("Generating molecules with REINVENT...")
+    generated_molecules = generate_molecules()
+
+    # Step 2: Pass generated molecules to the Metis feedback system
+    await ctx.send(f"Collected molecules: {generated_molecules}. Collecting feedback now...")
+    feedback = collect_feedback(generated_molecules)
+
+    # Step 3: Process feedback to adjust REINVENT scoring/reward function
+    updated_reward_function = process_feedback(feedback)
+    await ctx.send(f"Feedback received: {feedback}. Updating the reward function...")
+
+    # Step 4: Retrain REINVENT model based on feedback
+    retrain_model(updated_reward_function)
+    await ctx.send("REINVENT model retrained with updated reward function.")
+
+    return generated_molecules, feedback
+
 # ---------------    Events    -------------------------------
 
 @client.event
@@ -84,6 +110,7 @@ command_names = {
   'create_graph_node': 'creates a new node in the global chem graph',
   'fetch_training_set': 'fetches the training set and sends the image to the corresponding channel',
   'file_issue': 'creates a github issue for something that needs fixing'
+  'generate_new_chemicals' : 'Generates new chemical compounds using REINVENT'
 }
 
 mother_nature = MotherNatureCommands(
@@ -150,5 +177,11 @@ async def fetch_training_set(ctx, categories: str):
 async def file_issue(ctx, title: str, issue: str):
   await ctx.response.send_message("Filing issue now...")
   await mother_nature.file_issue(ctx.channel.name, title, issue)
+
+@bot.command(name='generate_new_chemicals', description="Generates new chemical compounds using REINVENT", guild=discord.Object(id=996592811887579317))
+async def generate_new_chemicals(ctx, channel_name: str):
+    await ctx.send("Generating new chemicals with feedback-driven REINVENT...")
+    molecules, feedback = await run_reinvent_with_feedback(ctx, channel_name)
+    await ctx.send(f"Generated molecules: {molecules}\nFeedback: {feedback}")  
 
 client.run(DISCORD_TOKEN)

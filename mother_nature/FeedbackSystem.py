@@ -1,31 +1,43 @@
-import csv
-import os
-from datetime import datetime
+import pandas as pd
 
-class FeedbackSystem:
-    def __init__(self, feedback_file='myfile.csv'):
-        self.feedback_file = feedback_file
-        self.ensure_feedback_file()
+def collect_feedback(molecules):
+    # Example function to collect feedback
+    # This could involve using Metis or reading from a CSV
+    feedback_df = pd.read_csv("feedback.csv")  # Assuming feedback.csv is the file with feedback from Metis
 
-    def ensure_feedback_file(self):
-        """Create the feedback CSV file if it doesn't exist."""
-        if not os.path.exists(self.feedback_file):
-            with open(self.feedback_file, mode='w', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerow(['Timestamp', 'User', 'Feedback'])  # Header
+    # Here you would match feedback to molecules and process it
+    return feedback_df
 
-    def add_feedback(self, user: str, feedback: str):
-        """Add feedback to the CSV file."""
-        with open(self.feedback_file, mode='a', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow([datetime.now().isoformat(), user, feedback])
+def process_feedback(feedback):
+    # Example function to process feedback and adjust REINVENT scoring function
+    # You can update the scoring function for REINVENT based on feedback
+    updated_scoring_function = adjust_scoring_function(feedback)
+    return updated_scoring_function
 
-    def get_feedback(self):
-        """Retrieve all feedback from the CSV file."""
-        feedback_list = []
-        with open(self.feedback_file, mode='r') as file:
-            reader = csv.reader(file)
-            next(reader)  # Skip header
-            feedback_list = list(reader)
-        return feedback_list
+def adjust_scoring_function(feedback):
+    # Logic to adjust REINVENT's scoring/reward function based on feedback
+    # For example, reduce the weight for toxicity, or increase the reward for solubility
+    return {
+        "scoring_function": "adjusted",
+        "parameters": {
+            "toxicity_weight": 0.5,
+            "solubility_weight": 1.0
+        }
+    }
+
+import json
+
+def update_reinvent_config(feedback):
+    # Load existing config
+    with open("reinvent_config.json", "r") as f:
+        config = json.load(f)
+
+    # Adjust scoring function or other parameters based on feedback
+    config['parameters']['scoring_function']['weight'] = feedback['toxicity_weight']
+
+    # Save updated config
+    with open("reinvent_config.json", "w") as f:
+        json.dump(config, f)
+
+
 
