@@ -83,7 +83,11 @@ command_names = {
   'retrain': 'retrains mother nature bot ',
   'create_graph_node': 'creates a new node in the global chem graph',
   'fetch_training_set': 'fetches the training set and sends the image to the corresponding channel',
-  'file_issue': 'creates a github issue for something that needs fixing'
+  'file_issue': 'creates a github issue for something that needs fixing',
+  'collect_feedback': 'start Metis GUI for collecting expert feedback on molecules',
+  'process_feedback': 'process feedback results from Metis session',
+  'feedback_status': 'get status of feedback collection for categories',
+  'create_feedback_issue': 'create GitHub issue with feedback results'
 }
 
 mother_nature = MotherNatureCommands(
@@ -150,5 +154,28 @@ async def fetch_training_set(ctx, categories: str):
 async def file_issue(ctx, title: str, issue: str):
   await ctx.response.send_message("Filing issue now...")
   await mother_nature.file_issue(ctx.channel.name, title, issue)
+
+# Feedback System Commands
+# ------------------------
+
+@bot.command(name='collect_feedback', description=command_names['collect_feedback'], guild=guild_object)
+async def collect_feedback(ctx, category: str, num_molecules: typing.Optional[int] = 20):
+  await ctx.response.send_message("Starting feedback collection...")
+  await mother_nature.collect_feedback(ctx.channel.name, category, num_molecules)
+
+@bot.command(name='process_feedback', description=command_names['process_feedback'], guild=guild_object)
+async def process_feedback(ctx, category: str):
+  await ctx.response.send_message("Processing feedback results...")
+  await mother_nature.process_feedback(ctx.channel.name, category)
+
+@bot.command(name='feedback_status', description=command_names['feedback_status'], guild=guild_object)
+async def feedback_status(ctx, category: typing.Optional[str] = None):
+  await ctx.response.send_message("Getting feedback status...")
+  await mother_nature.feedback_status(ctx.channel.name, category)
+
+@bot.command(name='create_feedback_issue', description=command_names['create_feedback_issue'], guild=guild_object)
+async def create_feedback_issue(ctx, category: str):
+  await ctx.response.send_message("Creating feedback issue...")
+  await mother_nature.create_feedback_issue(ctx.channel.name, category)
 
 client.run(DISCORD_TOKEN)

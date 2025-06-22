@@ -30,6 +30,7 @@ from discord import app_commands
 
 from github import Github
 from mother_nature.color_legal import BotColourAdditiveList
+from mother_nature.feedback_system import MetisFeedbackSystem
 
 class MotherNatureCommands(object):
 
@@ -47,7 +48,11 @@ class MotherNatureCommands(object):
       "retrain_mother_nature",      # Retrains Mother Nature
       "create_graph_node",          # Creates a new graph node in Global Chem repo
       "fetch_training_set",         # Fetches the training set for the given category
-      "file_issue"                  # Creates an issue on Global Chem repo
+      "file_issue",                 # Creates an issue on Global Chem repo
+      "collect_feedback",           # Start Metis GUI for feedback collection
+      "process_feedback",           # Process feedback results from Metis session
+      "feedback_status",            # Get status of feedback collection
+      "create_feedback_issue"       # Create GitHub issue with feedback results
     ]
 
     __langchain_keywords__ = [
@@ -69,6 +74,15 @@ class MotherNatureCommands(object):
 
         self.client = client
         self.bot = bot
+        
+        # Initialize feedback system
+        self.feedback_system = MetisFeedbackSystem(
+            github=github,
+            repo=repo,
+            global_chem_repo=global_chem_repo,
+            client=client,
+            bot=bot
+        )
 
     def get_channel(self, channel_name):
 
@@ -261,7 +275,6 @@ class MotherNatureCommands(object):
       body=textwrap.dedent(template_string),
       assignee="Sulstice"
     )
-<<<<<<< HEAD
 
     async def add_smile_file(self, smile_index, channel_name):
       channel = self.get_channel(channel_name)
@@ -299,3 +312,108 @@ class MotherNatureCommands(object):
 
       channel = self.get_channel(channel_name)
       channel.send(title + "\n" + issue)
+
+    # Feedback System Methods
+    # -----------------------
+
+    async def collect_feedback(self, channel_name, category, num_molecules=20):
+        '''
+        Start Metis GUI for feedback collection on generated molecules
+        
+        Arguments:
+            channel_name (String): Discord channel name
+            category (String): Chemical category for feedback collection
+            num_molecules (int): Number of molecules to show for feedback
+            
+        Returns:
+            Discord Message (String): Status message about feedback collection
+        '''
+        
+        channel = self.get_channel(channel_name)
+        if not channel:
+            return
+            
+        await channel.send(f"Starting feedback collection for {category} category...")
+        
+        result = await self.feedback_system.collect_feedback(
+            channel_name=channel_name,
+            category=category,
+            num_molecules=num_molecules
+        )
+        
+        await channel.send(result)
+
+    async def process_feedback(self, channel_name, category):
+        '''
+        Process feedback results from Metis session
+        
+        Arguments:
+            channel_name (String): Discord channel name
+            category (String): Chemical category to process feedback for
+            
+        Returns:
+            Discord Message (String): Feedback summary and analysis
+        '''
+        
+        channel = self.get_channel(channel_name)
+        if not channel:
+            return
+            
+        await channel.send(f"Processing feedback results for {category} category...")
+        
+        result = await self.feedback_system.process_feedback_results(category=category)
+        
+        await channel.send(result)
+
+    async def feedback_status(self, channel_name, category=None):
+        '''
+        Get status of feedback collection for categories
+        
+        Arguments:
+            channel_name (String): Discord channel name
+            category (String): Specific category to check (optional)
+            
+        Returns:
+            Discord Message (String): Status of feedback collection
+        '''
+        
+        channel = self.get_channel(channel_name)
+        if not channel:
+            return
+            
+        result = self.feedback_system.get_feedback_status(category=category)
+        
+        await channel.send(result)
+
+    async def create_feedback_issue(self, channel_name, category):
+        '''
+        Create GitHub issue with feedback results
+        
+        Arguments:
+            channel_name (String): Discord channel name
+            category (String): Chemical category for feedback issue
+            
+        Returns:
+            Discord Message (String): Status message about issue creation
+        '''
+        
+        channel = self.get_channel(channel_name)
+        if not channel:
+            return
+            
+        await channel.send(f"Creating feedback issue for {category} category...")
+        
+        # First process the feedback to get summary
+        feedback_summary = await self.feedback_system.process_feedback_results(category=category)
+        
+        if "No feedback results found" in feedback_summary:
+            await channel.send(f"No feedback results found for {category}. Please collect feedback first.")
+            return
+            
+        # Create GitHub issue with feedback summary
+        result = await self.feedback_system.create_feedback_issue(
+            category=category,
+            feedback_summary=feedback_summary
+        )
+        
+        await channel.send(result)
