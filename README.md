@@ -95,6 +95,7 @@ DataCity was designed for capsulehack.io and is the dream for three young develo
 
 - Project Lead [Suliman sharif](http://sulstice.github.io/)
 - Lead Developer [Sevien Schulhoff]()
+- Associate Developers [Anu Gamage]() , [Damilola Bodun]()
 - Quality Assurance Tester []()
 
 * * * * *
