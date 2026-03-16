@@ -10,6 +10,9 @@ authors:
   - name: Sevien Schulhoff
     orcid: 0000-0002-1342-9258
     affiliation: 1
+  - name: Anu Gamage
+    orcid: 0009-0004-1597-9538
+    affiliation: 1
   - name: Bodun Damilola
     affiliation: 1
   - name: Jonas Xavier Roper
