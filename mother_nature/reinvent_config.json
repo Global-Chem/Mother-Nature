@@ -1,0 +1,19 @@
+{
+    "name": "REINVENT",
+    "parameters": {
+      "prior": "path_to_pretrained_model",
+      "scoring_function": {
+        "name": "custom",
+        "parameters": {
+          "component_type": "Toxicity",
+          "weight": 0.8,
+          "score_threshold": 0.5
+        }
+      },
+      "generative_model_parameters": {
+        "batch_size": 64,
+        "learning_rate": 0.001
+      }
+    }
+  }
+  

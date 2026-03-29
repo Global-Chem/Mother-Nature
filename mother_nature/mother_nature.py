@@ -31,6 +31,9 @@ from discord import app_commands
 from github import Github
 from mother_nature.color_legal import BotColourAdditiveList
 
+from runner import run_reinvent_with_feedback
+
+
 class MotherNatureCommands(object):
 
     __GUILD_ID__ = 996592811887579317
@@ -69,6 +72,22 @@ class MotherNatureCommands(object):
 
         self.client = client
         self.bot = bot
+
+    async def run_mother_nature_pipeline(self, channel_name):
+        """
+        This function runs the REINVENT pipeline and sends the generated molecules 
+        and feedback to a specified Discord channel.
+        """
+        channel = self.get_channel(channel_name)
+        if not channel:
+            return
+
+        # Generate molecules using REINVENT and get feedback
+        molecules, feedback = run_reinvent_with_feedback()
+
+        # Send the generated molecules and feedback to the channel
+        await channel.send(f"Generated Molecules: {molecules}")
+        await channel.send(f"Feedback: {feedback}")
 
     def get_channel(self, channel_name):
 
